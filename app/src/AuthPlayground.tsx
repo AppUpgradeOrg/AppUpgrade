@@ -22,6 +22,7 @@ export const AuthPlayground: FC = () => {
     // app.auth().onAuthStateChanged((u) => console.log(u))
     // const credential = await app.auth().signInWithEmailAndPassword("ryanspillsbury90@gmail.com", "HelloWorld1!")
     console.log(app.auth().currentUser);
+    // console.log(credential)
   }
 
   return (
