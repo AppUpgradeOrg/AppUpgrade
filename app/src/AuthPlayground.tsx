@@ -3,6 +3,8 @@ import { useDispatch, useSelector } from "react-redux";
 import { setAuthenticated } from "./auth/auth.slice";
 import { RootState } from "./root-reducer";
 import { app } from './firebase/firebase.service'
+import TextField from '@material-ui/core/TextField';
+
 app.auth().onAuthStateChanged((u) => {
   console.log("Changed", u)
 })
@@ -24,13 +26,37 @@ export const AuthPlayground: FC = () => {
     console.log(app.auth().currentUser);
     // console.log(credential)
   }
+  
+  const createNewUser = async () => {
+    
+    const user = await app.auth().createUserWithEmailAndPassword()
+    console.log(user);
+  }
 
   return (
-    <div>
-      Is Authenticated: {isAuthenticated ? "true" : "false"}
-      <button onClick={toggleAuthenticated}>
-        Change state
-      </button>
-    </div>
+    // <div>
+    //   Is Authenticated: {isAuthenticated ? "true" : "false"}
+    //   <button onClick={toggleAuthenticated}>
+    //     Change state
+    //   </button>
+    // </div>
+    <form>
+      <div>
+        <TextField 
+        required 
+        id="standard-required" 
+        label="Email" 
+        onChange={handleChange}
+        />
+      </div>
+      <div>
+        <TextField 
+        required 
+        id="standard-required" 
+        label="Password"
+        onChange={handleChange} 
+        />
+        </div>
+    </form>
   )
 }
