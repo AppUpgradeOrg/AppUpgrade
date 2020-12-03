@@ -12,7 +12,6 @@ function App() {
         <Switch>
         <Route path="/signup">
       <div className="App">
-        Hello world
         <AuthPlayground />
       </div>
           </Route>
