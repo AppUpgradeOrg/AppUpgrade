@@ -1,11 +1,31 @@
 import React, { FC, useState } from "react";
 import { useHistory } from "react-router-dom";
-import { useDispatch, useSelector } from "react-redux";
+import { useDispatch } from "react-redux";
 import { setAuthenticated } from "./auth/auth.slice";
-import { TextField, Button, FormHelperText } from '@material-ui/core';
+import { TextField, Button, FormHelperText, Container, Grid } from '@material-ui/core';
 import { app } from './firebase/firebase.service'
+import { makeStyles } from "@material-ui/core/styles";
+
+const useStyles = makeStyles(() => ({
+  root: {
+    minHeight: "100vh",
+    display: "flex",
+    flexDirection: "column",
+    "& h2": {
+      textAlign: "center"
+    },
+    maxWidth: "600px"
+  },
+  formHelperText: {
+    color: '#ff6961'
+  },
+  loginButton: {
+    margin: '20px'
+  }
+}));
 
 export const Login: FC = () => {
+  const classes = useStyles();
   const dispatch = useDispatch();
   let history = useHistory();
 
@@ -38,41 +58,52 @@ const handleChange = (e: React.ChangeEvent < HTMLInputElement >) => {
 };
 
   return (
-    <>
+    <Container className={classes.root}>
+      <div>
       <h1>Login</h1>
       <form>
-      <div>
+      <Grid container spacing={3}>
+      <Grid item xs={12}>
         <TextField 
         required 
+        fullWidth={true}
         id="standard-required" 
         label="Email" 
         name="email"
         type="email"
         onChange={handleChange}
         />
-      </div>
-      <div>
+      </Grid>
+      <Grid item xs={12}>
         <TextField 
         required 
+        fullWidth={true}
         id="standard-required" 
         label="Password"
         name="password"
         type="password"
         onChange={handleChange} 
         />
-        </div>
-        <div>
-          <FormHelperText>{formState.error}</FormHelperText>
+        </Grid>
+        <Grid item xs={12}>
+          <FormHelperText 
+          className={classes.formHelperText}>
+          {formState.error}
+          </FormHelperText>
         <Button 
+        className={classes.loginButton}
         variant="contained" 
         color="primary"
         onClick={loginUser}
         >
           Login
         </Button>
-        </div>
+        <a href='/signup'>New user? Create an account.</a>
+        </Grid>
+        </Grid>
     </form>
-  </>
+    </div>
+    </Container>
   )
 
 }

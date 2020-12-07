@@ -1,5 +1,5 @@
 import React, { FC } from 'react'
-import { useDispatch, useSelector } from "react-redux";
+import { useDispatch } from "react-redux";
 import { setAuthenticated } from "./auth/auth.slice";
 import { Button } from '@material-ui/core';
 import { app } from './firebase/firebase.service'
