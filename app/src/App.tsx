@@ -1,28 +1,50 @@
 import React from 'react';
-import { Route, BrowserRouter as Router, Switch } from "react-router-dom";
+import { useSelector } from "react-redux";
+import { RootState } from "./root-reducer";
+import { Route, BrowserRouter as Router, Switch, Redirect } from "react-router-dom";
 import './App.css';
 import { Provider } from 'react-redux';
 import { store } from './store';
-import { AuthPlayground } from './AuthPlayground';
+import { Signup } from './Signup';
+import { Login } from './Login';
+import { Private } from './Private';
+
+function ProtectedRoute ({children, ...rest}: any) {
+  const { isAuthenticated } = useSelector((state: RootState) => {
+    return {
+      isAuthenticated: state.auth.isAuthenticated
+    }
+  })
+  if (isAuthenticated) {
+    return children;
+  } else {
+    return <Redirect to='/login' />
+  }
+}
 
 function App() {
   return (
     <Provider store={store} >
       <Router>
         <Switch>
-        <Route path="/signup">
-      <div className="App">
-        <AuthPlayground />
-      </div>
+          <Route path="/signup">
+            <div className="App">
+              <Signup />
+            </div>
           </Route>
-          <Route path="/signin">
-            {/* signin */}
+          <Route path="/login">
+            <div className="App">
+              <Login/>
+            </div>
           </Route>
+          <ProtectedRoute path='/private'>
+            <Private/>
+          </ProtectedRoute>
           <Route path="/">
-            {/* Home */}
-            <div>Landing Page</div>
+              {/* Home */}
+              <div>Home Page</div>
           </Route>
-      </Switch>
+        </Switch>
       </Router>
     </Provider>
   );
