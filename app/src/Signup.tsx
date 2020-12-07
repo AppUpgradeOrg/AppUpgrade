@@ -3,17 +3,24 @@ import { useHistory } from "react-router-dom";
 import { useDispatch} from "react-redux";
 import { setAuthenticated } from "./auth/auth.slice";
 import { app } from './firebase/firebase.service'
-import { TextField, Button, FormHelperText, Grid, Box } from '@material-ui/core';
+import { TextField, Button, FormHelperText, Grid, Container } from '@material-ui/core';
 import { makeStyles } from "@material-ui/core/styles";
 
 const useStyles = makeStyles(() => ({
-  boopButton: {
-    maxWidth: "300px",
-    margin: "0 auto"
+  root: {
+    minHeight: "100vh",
+    display: "flex",
+    flexDirection: "column",
+    "& h2": {
+      textAlign: "center"
+    },
+    maxWidth: "600px"
   },
-  subtextSmall: {
-    textAlign: "center",
-    fontSize: "small"
+  formHelperText: {
+    color: '#ff6961'
+  },
+  signupButton: {
+    margin: '20px'
   }
 }));
 
@@ -31,20 +38,6 @@ export const Signup: FC = () => {
     password: '', 
     error: ''
   });
-
-  // const { isAuthenticated } = useSelector((state: RootState) => {
-  //   return {
-  //     isAuthenticated: state.auth.isAuthenticated
-  //   }
-  // })
-
-  // const toggleAuthenticated = async () => {
-  //   console.log(app.auth().currentUser);
-  //   app.auth().onAuthStateChanged((u) => console.log(u))
-  //   const credential = await app.auth().signInWithEmailAndPassword("ryanspillsbury90@gmail.com", "HelloWorld1!")
-  //   console.log(app.auth().currentUser);
-  //   console.log(credential)
-  // }
   
   const createNewUser = async () => {
     try {
@@ -79,42 +72,51 @@ export const Signup: FC = () => {
   };
 
   return (
-    <>
-      <h1>Signup</h1>
+    <Container className={classes.root}>
+      <div>
+      <h1>Create an account</h1>
       <form>
-        <Grid container spacing={2}>
-        <Grid item xs={12}>
-          <TextField 
-          required 
-          id="standard-required" 
-          label="Email" 
-          name="email"
-          type="email"
-          onChange={handleChange}
-          />
+        <Grid container spacing={3}>
+          <Grid item xs={12}>
+            <TextField 
+            required 
+            fullWidth={true}
+            id="standard-required" 
+            label="Email" 
+            name="email"
+            type="email"
+            onChange={handleChange}
+            />
           </Grid>
           <Grid item xs={12}>
-          <TextField 
-          required 
-          id="standard-required" 
-          label="Password"
-          name="password"
-          type="password"
-          onChange={handleChange} 
-          />
-          <FormHelperText>{formState.error}</FormHelperText>  
+            <TextField 
+            required 
+            fullWidth={true}
+            id="standard-required" 
+            label="Password"
+            name="password"
+            type="password"
+            onChange={handleChange} 
+            />
+            <FormHelperText 
+            className={classes.formHelperText}>
+            {formState.error}
+            </FormHelperText>  
           </Grid>
           <Grid item xs={12}>
-          <Button 
-          variant="contained" 
-          color="primary"
-          onClick={createNewUser}
-          >
-            Signup
-          </Button>
+            <Button 
+            className={classes.signupButton}
+            variant="contained" 
+            color="primary"
+            onClick={createNewUser}
+            >
+              Signup
+            </Button>
+            <a href='/login'>Already have an account?</a>
           </Grid>
-          </Grid>
+        </Grid>
       </form>
-    </>
+      </div>
+    </Container>
   )
 }
