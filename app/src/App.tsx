@@ -8,19 +8,8 @@ import { store } from './store';
 import { Signup } from './Signup';
 import { Login } from './Login';
 import { Private } from './Private';
-
-function ProtectedRoute ({children, ...rest}: any) {
-  const { isAuthenticated } = useSelector((state: RootState) => {
-    return {
-      isAuthenticated: state.auth.isAuthenticated
-    }
-  })
-  if (isAuthenticated) {
-    return children;
-  } else {
-    return <Redirect to='/login' />
-  }
-}
+import { Loading } from './Loading';
+import { ProtectedRoute } from './protected-route';
 
 function App() {
   return (
@@ -42,7 +31,7 @@ function App() {
           </ProtectedRoute>
           <Route path="/">
               {/* Home */}
-              <div>Home Page</div>
+              <Loading />
           </Route>
         </Switch>
       </Router>
