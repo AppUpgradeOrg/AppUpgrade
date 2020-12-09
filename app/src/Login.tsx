@@ -39,8 +39,9 @@ export const Login: FC = () => {
     error: ''
   });
 
-const loginUser = async () => {
-  dispatch(signInUser(formState.email, formState.password))
+const loginUser = async (e: React.FormEvent) => {
+  e.preventDefault()
+  dispatch(signInUser(formState.email, formState.password));
   // console.log('form submitted');
   // try {
   //   const credential = await app.auth().signInWithEmailAndPassword(formState.email, formState.password);
@@ -70,7 +71,7 @@ const handleChange = (e: React.ChangeEvent < HTMLInputElement >) => {
     <Container className={classes.root}>
       <div>
       <h1>Login</h1>
-      <form>
+      <form onSubmit={loginUser}>
       <Grid container spacing={3}>
       <Grid item xs={12}>
         <TextField
@@ -103,6 +104,7 @@ const handleChange = (e: React.ChangeEvent < HTMLInputElement >) => {
         className={classes.loginButton}
         variant="contained"
         color="primary"
+        type='submit'
         onClick={loginUser}
         >
           Login
