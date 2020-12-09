@@ -1,10 +1,11 @@
 import React, { FC, useState } from "react";
-import { useHistory } from "react-router-dom";
-import { useDispatch } from "react-redux";
-import { setAuthenticated } from "./auth/auth.slice";
+import { Redirect, useHistory } from "react-router-dom";
+import { useDispatch, useSelector } from "react-redux";
+import { setAuthenticated, signInUser } from "./auth/auth.slice";
 import { TextField, Button, FormHelperText, Container, Grid } from '@material-ui/core';
 import { app } from './firebase/firebase.service'
 import { makeStyles } from "@material-ui/core/styles";
+import { RootState } from "./root-reducer";
 
 const useStyles = makeStyles(() => ({
   root: {
@@ -25,6 +26,9 @@ const useStyles = makeStyles(() => ({
 }));
 
 export const Login: FC = () => {
+  const user = useSelector((state: RootState) => {
+    return state.auth.user
+  })
   const classes = useStyles();
   const dispatch = useDispatch();
   let history = useHistory();
@@ -36,17 +40,18 @@ export const Login: FC = () => {
   });
 
 const loginUser = async () => {
-  console.log('form submitted');
-  try {
-    const credential = await app.auth().signInWithEmailAndPassword(formState.email, formState.password);
-    console.log('credential: ', credential);
-    if (credential) {
-      await dispatch(setAuthenticated({ isAuthenticated: true }));
-      history.push('/private');
-    }
-  } catch (err) {
-    setFormState({...formState, error: 'Incorrect, email or password'})
-  }
+  dispatch(signInUser(formState.email, formState.password))
+  // console.log('form submitted');
+  // try {
+  //   const credential = await app.auth().signInWithEmailAndPassword(formState.email, formState.password);
+  //   console.log('credential: ', credential);
+  //   if (credential) {
+  //     await dispatch(setAuthenticated({ isAuthenticated: true }));
+  //     history.push('/private');
+  //   }
+  // } catch (err) {
+  //   setFormState({...formState, error: 'Incorrect, email or password'})
+  // }
 }
 
 const handleChange = (e: React.ChangeEvent < HTMLInputElement >) => {
@@ -57,6 +62,10 @@ const handleChange = (e: React.ChangeEvent < HTMLInputElement >) => {
   });
 };
 
+  if (user) {
+    return <Redirect to='/private' />
+  }
+
   return (
     <Container className={classes.root}>
       <div>
@@ -64,35 +73,35 @@ const handleChange = (e: React.ChangeEvent < HTMLInputElement >) => {
       <form>
       <Grid container spacing={3}>
       <Grid item xs={12}>
-        <TextField 
-        required 
+        <TextField
+        required
         fullWidth={true}
-        id="standard-required" 
-        label="Email" 
+        id="standard-required"
+        label="Email"
         name="email"
         type="email"
         onChange={handleChange}
         />
       </Grid>
       <Grid item xs={12}>
-        <TextField 
-        required 
+        <TextField
+        required
         fullWidth={true}
-        id="standard-required" 
+        id="standard-required"
         label="Password"
         name="password"
         type="password"
-        onChange={handleChange} 
+        onChange={handleChange}
         />
         </Grid>
         <Grid item xs={12}>
-          <FormHelperText 
+          <FormHelperText
           className={classes.formHelperText}>
           {formState.error}
           </FormHelperText>
-        <Button 
+        <Button
         className={classes.loginButton}
-        variant="contained" 
+        variant="contained"
         color="primary"
         onClick={loginUser}
         >
