@@ -4,6 +4,7 @@ import { AppThunk } from "../store";
 export interface AuthState {
   isAuthenticated: boolean;
   user: AppUser | undefined | null;
+  signInError: string | undefined;
 }
 
 export interface AppUser {
@@ -12,7 +13,8 @@ export interface AppUser {
 
 const initialState: AuthState = {
   isAuthenticated: false,
-  user: undefined
+  user: undefined, 
+  signInError: undefined
 }
 
 const auth = createSlice({
@@ -26,12 +28,16 @@ const auth = createSlice({
       state.user = action.payload.user;
       state.isAuthenticated = Boolean(action.payload.user)
     },
+    setError(state, action: PayloadAction<{ signInError: string | undefined }>) {
+      state.signInError = action.payload.signInError;
+    }
   }
 });
 
 export const {
   setAuthenticated,
-  setUser
+  setUser, 
+  setError
 } = auth.actions;
 
 export const initializeUser = (): AppThunk => async dispatch => {
@@ -52,11 +58,15 @@ export const initializeUser = (): AppThunk => async dispatch => {
 
 export const signInUser = (email: string, password: string): AppThunk => async dispatch => {
   // todo try-catch with sign-in errors
-  const credential = await app.auth().signInWithEmailAndPassword(email, password);
-  if (credential.user) {
-    dispatch(setUser({ user: { email: credential.user.email! }}));
-  } else {
-    dispatch(setUser({ user: null }));
+  try {
+    const credential = await app.auth().signInWithEmailAndPassword(email, password);
+    if (credential.user) {
+      dispatch(setUser({ user: { email: credential.user.email! }}));
+    } else {
+      dispatch(setUser({ user: null }));
+    }
+  } catch (err) {
+    dispatch(setError({ signInError: 'Incorrect, email or password'}))
   }
 }
 

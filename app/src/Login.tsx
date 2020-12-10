@@ -29,30 +29,20 @@ export const Login: FC = () => {
   const user = useSelector((state: RootState) => {
     return state.auth.user
   })
+  const signInError = useSelector((state: RootState) => {
+    return state.auth.signInError
+  })
   const classes = useStyles();
   const dispatch = useDispatch();
-  let history = useHistory();
 
-  const [formState, setFormState] = useState <{email: string, password: string, error: string}>({
+  const [formState, setFormState] = useState <{email: string, password: string}>({
     email: '',
-    password: '',
-    error: ''
+    password: ''
   });
 
 const loginUser = async (e: React.FormEvent) => {
   e.preventDefault()
   dispatch(signInUser(formState.email, formState.password));
-  // console.log('form submitted');
-  // try {
-  //   const credential = await app.auth().signInWithEmailAndPassword(formState.email, formState.password);
-  //   console.log('credential: ', credential);
-  //   if (credential) {
-  //     await dispatch(setAuthenticated({ isAuthenticated: true }));
-  //     history.push('/private');
-  //   }
-  // } catch (err) {
-  //   setFormState({...formState, error: 'Incorrect, email or password'})
-  // }
 }
 
 const handleChange = (e: React.ChangeEvent < HTMLInputElement >) => {
@@ -67,6 +57,10 @@ const handleChange = (e: React.ChangeEvent < HTMLInputElement >) => {
     return <Redirect to='/private' />
   }
 
+  // if (signInError) {
+  //   setFormState( { ...formState, error: true } )
+  // }
+
   return (
     <Container className={classes.root}>
       <div>
@@ -77,6 +71,7 @@ const handleChange = (e: React.ChangeEvent < HTMLInputElement >) => {
         <TextField
         required
         fullWidth={true}
+        error={signInError ? true : false}
         id="standard-required"
         label="Email"
         name="email"
@@ -88,6 +83,7 @@ const handleChange = (e: React.ChangeEvent < HTMLInputElement >) => {
         <TextField
         required
         fullWidth={true}
+        error={signInError ? true : false}
         id="standard-required"
         label="Password"
         name="password"
@@ -98,7 +94,7 @@ const handleChange = (e: React.ChangeEvent < HTMLInputElement >) => {
         <Grid item xs={12}>
           <FormHelperText
           className={classes.formHelperText}>
-          {formState.error}
+          {signInError}
           </FormHelperText>
         <Button
         className={classes.loginButton}
