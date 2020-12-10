@@ -55,7 +55,7 @@ export const Signup: FC = () => {
   };
 
   if (user) {
-    <Redirect to='/private' />
+    return <Redirect to='/private' />
   }
 
   return (
