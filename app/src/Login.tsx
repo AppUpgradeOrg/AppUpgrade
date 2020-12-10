@@ -1,9 +1,8 @@
 import React, { FC, useState } from "react";
-import { Redirect, useHistory } from "react-router-dom";
+import { Redirect } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
-import { setAuthenticated, signInUser } from "./auth/auth.slice";
+import { signInUser } from "./auth/auth.slice";
 import { TextField, Button, FormHelperText, Container, Grid } from '@material-ui/core';
-import { app } from './firebase/firebase.service'
 import { makeStyles } from "@material-ui/core/styles";
 import { RootState } from "./root-reducer";
 
@@ -56,10 +55,6 @@ const handleChange = (e: React.ChangeEvent < HTMLInputElement >) => {
   if (user) {
     return <Redirect to='/private' />
   }
-
-  // if (signInError) {
-  //   setFormState( { ...formState, error: true } )
-  // }
 
   return (
     <Container className={classes.root}>
