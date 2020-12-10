@@ -1,10 +1,10 @@
 import React, { FC, useState } from "react";
-import { useHistory } from "react-router-dom";
-import { useDispatch} from "react-redux";
-import { setAuthenticated } from "./auth/auth.slice";
-import { app } from './firebase/firebase.service'
+import { Redirect } from "react-router-dom";
+import { useDispatch, useSelector} from "react-redux";
+import { newUser } from "./auth/auth.slice";
 import { TextField, Button, FormHelperText, Grid, Container } from '@material-ui/core';
 import { makeStyles } from "@material-ui/core/styles";
+import { RootState } from "./root-reducer";
 
 const useStyles = makeStyles(() => ({
   root: {
@@ -24,43 +24,26 @@ const useStyles = makeStyles(() => ({
   }
 }));
 
-app.auth().onAuthStateChanged((u) => {
-  console.log("Changed", u)
-})
-
 export const Signup: FC = () => {
+  const user = useSelector((state: RootState) => {
+    return state.auth.user
+  })
+  const signUpUserErr = useSelector((state: RootState) => {
+    return state.auth.signUpUserErr
+  })
+  const signUpPasswordErr = useSelector((state: RootState) => {
+    return state.auth.signUpPasswordErr
+  })
   const classes = useStyles();
   const dispatch = useDispatch();
-  let history = useHistory();
 
-  const [formState, setFormState] = useState <{email: string, password: string, error: string}>({
+  const [formState, setFormState] = useState <{email: string, password: string}>({
     email: '',
-    password: '', 
-    error: ''
+    password: ''
   });
   
   const createNewUser = async () => {
-    try {
-      const user = await app.auth().createUserWithEmailAndPassword(formState.email, formState.password)
-      if (user) {
-        dispatch(setAuthenticated({ isAuthenticated: true }));
-        history.push('/private');
-      }
-    } catch (err) {
-      switch (err.code) {
-        case 'auth/email-already-in-use':
-          setFormState({...formState, error: 'Looks like you already have an account. Click Login.'});
-          break;
-        case 'auth/invalid-email':
-          setFormState({...formState, error: 'Please enter a valid email'});
-          break;
-        case 'auth/weak-password':
-          setFormState({...formState, error: 'Password must be at least 6 characters'});
-          break;
-        default:
-          break;
-      }
-    }
+    dispatch(newUser(formState.email, formState.password));
   }
 
   const handleChange = (e: React.ChangeEvent < HTMLInputElement >) => {
@@ -70,6 +53,10 @@ export const Signup: FC = () => {
       [name]: value
     });
   };
+
+  if (user) {
+    <Redirect to='/private' />
+  }
 
   return (
     <Container className={classes.root}>
@@ -81,6 +68,7 @@ export const Signup: FC = () => {
             <TextField 
             required 
             fullWidth={true}
+            error={signUpUserErr ? true : false}
             id="standard-required" 
             label="Email" 
             name="email"
@@ -92,6 +80,7 @@ export const Signup: FC = () => {
             <TextField 
             required 
             fullWidth={true}
+            error={signUpPasswordErr ? true : false}
             id="standard-required" 
             label="Password"
             name="password"
@@ -100,7 +89,7 @@ export const Signup: FC = () => {
             />
             <FormHelperText 
             className={classes.formHelperText}>
-            {formState.error}
+            {signUpPasswordErr || signUpUserErr}
             </FormHelperText>  
           </Grid>
           <Grid item xs={12}>
