@@ -1,7 +1,7 @@
 import React, { FC, useEffect, useState } from "react";
 import { Redirect } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
-import { RequestState, resetSignInTransientValues, signInUser } from "./auth/auth.slice";
+import { RequestState, resetSignInErrors, resetSignInTransientValues, signInUser } from "./auth/auth.slice";
 import { TextField, Button, FormHelperText, Container, Grid } from '@material-ui/core';
 import { makeStyles } from "@material-ui/core/styles";
 import { RootState } from "./root-reducer";
@@ -54,6 +54,10 @@ const handleChange = (e: React.ChangeEvent < HTMLInputElement >) => {
   });
 };
 
+const resetErrors = () => {
+  dispatch(resetSignInErrors());
+}
+
 useEffect(() => {
   return () => {
     dispatch(resetSignInTransientValues());
@@ -68,7 +72,7 @@ useEffect(() => {
     <Container className={classes.root}>
       <div>
       <h1>Login</h1>
-      <form onSubmit={loginUser} id="login-form">
+      <form onFocus={resetErrors} onSubmit={loginUser} id="login-form">
         <Grid container spacing={3}>
           <Grid item xs={12}>
             <TextField
