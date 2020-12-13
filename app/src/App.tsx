@@ -1,17 +1,17 @@
-import React from 'react';
-import { Route, BrowserRouter as Router, Switch} from "react-router-dom";
-import './App.css';
-import { Provider } from 'react-redux';
-import { store } from './store';
-import { Signup } from './Signup';
-import { Login } from './Login';
-import { Private } from './Private';
-import { Loading } from './Loading';
-import { ProtectedRoute } from './protected-route';
+import React from "react";
+import { Provider } from "react-redux";
+import { BrowserRouter as Router, Route, Switch } from "react-router-dom";
+import "./App.css";
+import { Loading } from "./Loading";
+import { Login } from "./Login";
+import { Private } from "./Private";
+import { ProtectedRoute } from "./protected-route";
+import { Signup } from "./Signup";
+import { store } from "./store";
 
-function App() {
+export function App() {
   return (
-    <Provider store={store} >
+    <Provider store={store}>
       <Router>
         <Switch>
           <Route path="/signup">
@@ -21,20 +21,18 @@ function App() {
           </Route>
           <Route path="/login">
             <div className="App">
-              <Login/>
+              <Login />
             </div>
           </Route>
-          <ProtectedRoute path='/private'>
-            <Private/>
+          <ProtectedRoute path="/private">
+            <Private />
           </ProtectedRoute>
           <Route path="/">
-              {/* Home */}
-              <Loading />
+            {/* Home */}
+            <Loading />
           </Route>
         </Switch>
       </Router>
     </Provider>
   );
 }
-
-export default App;
