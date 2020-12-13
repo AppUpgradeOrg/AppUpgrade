@@ -1,4 +1,4 @@
-import firebase from 'firebase';
+import firebase from "firebase";
 
 const firebaseConfig = {
   apiKey: "AIzaSyCS05MTf2CwsWo9T59mwhEdQUJbxmzBoPU",
@@ -8,9 +8,7 @@ const firebaseConfig = {
   storageBucket: "app-upgrade-qa.appspot.com",
   messagingSenderId: "61144220322",
   appId: "1:61144220322:web:c11953c511968b22c58dfb",
-  measurementId: "G-HXHRQSFST8"
-}
+  measurementId: "G-HXHRQSFST8",
+};
 
 export const app = firebase.initializeApp(firebaseConfig);
-
-

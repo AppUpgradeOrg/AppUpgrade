@@ -1,29 +1,28 @@
-import React, { FC, useCallback, useEffect } from "react";
+import React, { FC, useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { Redirect } from "react-router-dom";
 import { initializeUser } from "./auth/auth.slice";
 import { RootState } from "./root-reducer";
 
-
-export const ProtectedRoute: FC<{ path: string}> =  ({ children }: any) => {
+export const ProtectedRoute: FC<{ path: string }> = ({ children }: any) => {
   const dispatch = useDispatch();
-  const user = useSelector(( state: RootState) => {
+  const user = useSelector((state: RootState) => {
     return state.auth.user;
-  })
+  });
 
-  useEffect(useCallback(() => {
+  useEffect(() => {
     dispatch(initializeUser());
-  }, [dispatch]), []);
+  }, [dispatch]);
 
   if (user === undefined) {
-    return <>Loading</>
+    return <>Loading</>;
   }
 
   if (user === null) {
-    return <Redirect to="/login" />
+    return <Redirect to="/login" />;
   }
 
   if (user) {
     return children;
   }
-}
+};

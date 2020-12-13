@@ -1,26 +1,36 @@
-import { FC, useCallback, useEffect, useState } from "react";
+import { Grid } from "@material-ui/core";
+import React, { FC, useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { Redirect } from "react-router";
+import { Redirect } from "react-router-dom";
 import { initializeUser } from "./auth/auth.slice";
-import { app } from './firebase/firebase.service';
+import { LoadingSpinner } from "./LoadingSpinner";
 import { RootState } from "./root-reducer";
 export const Loading: FC = () => {
   const dispatch = useDispatch();
-  const user = useSelector(( state: RootState) => {
+  const user = useSelector((state: RootState) => {
     return state.auth.user;
-  })
+  });
 
-  useEffect(useCallback(() => {
+  useEffect(() => {
     dispatch(initializeUser());
-  }, [dispatch]), []);
+  }, [dispatch]);
 
   return (
-    <div>
-      {user === undefined && <>Loading</>}
-      {user === null && <>No User</>}
-      {user && (
-        <Redirect to="/private" />
+    <>
+      {user === undefined && (
+        <Grid
+          container
+          alignItems="center"
+          justify="center"
+          style={{ height: "100vh" }}
+        >
+          <Grid item xs={12}>
+            <LoadingSpinner />
+          </Grid>
+        </Grid>
       )}
-    </div>
+      {user === null && <Redirect to="/login" />}
+      {user && <Redirect to="/private" />}
+    </>
   );
-}
+};
