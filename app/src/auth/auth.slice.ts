@@ -92,6 +92,10 @@ export const resetSignUpErrors = (): AppThunk => async dispatch => {
 
 }
 
+export const resetSignInErrors = (): AppThunk => async dispatch => {
+  dispatch(setSignInError({ signInError: undefined }));
+}
+
 export const initializeUser = (): AppThunk => async dispatch => {
   const { currentUser } = app.auth();
   if (currentUser) {
