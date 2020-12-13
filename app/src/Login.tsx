@@ -1,5 +1,5 @@
 import React, { FC, useEffect, useState } from "react";
-import { Redirect } from "react-router-dom";
+import { Link, Redirect } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { RequestState, resetSignInErrors, resetSignInTransientValues, signInUser } from "./auth/auth.slice";
 import { TextField, Button, FormHelperText, Container, Grid } from '@material-ui/core';
@@ -113,7 +113,7 @@ useEffect(() => {
             >
               Login
             </Button>
-              <a href='/signup'>New user? Create an account.</a>
+              <Link to="/signup">New user? Create an account.</Link>
             </Grid>
           </Grid>
     </form>
