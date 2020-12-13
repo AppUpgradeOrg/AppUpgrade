@@ -107,4 +107,8 @@ export const signInUser = (email: string, password: string): AppThunk => async d
   }
 }
 
+export const signOutUser = (): AppThunk => async () => {
+  await app.auth().signOut();
+}
+
 export const authReducer = auth.reducer;
