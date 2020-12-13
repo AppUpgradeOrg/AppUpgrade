@@ -1,7 +1,7 @@
-import React, { FC, useState } from "react";
+import React, { FC, useEffect, useState } from "react";
 import { Redirect } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
-import { signInUser } from "./auth/auth.slice";
+import { RequestState, resetSignInTransientValues, signInUser } from "./auth/auth.slice";
 import { TextField, Button, FormHelperText, Container, Grid } from '@material-ui/core';
 import { makeStyles } from "@material-ui/core/styles";
 import { RootState } from "./root-reducer";
@@ -25,12 +25,14 @@ const useStyles = makeStyles(() => ({
 }));
 
 export const Login: FC = () => {
-  const user = useSelector((state: RootState) => {
-    return state.auth.user
+  const { user, signInError, signInRequestState } = useSelector((state: RootState) => {
+    return {
+      user: state.auth.user,
+      signInError: state.auth.signInError,
+      signInRequestState: state.auth.signInRequestState
+    }
   })
-  const signInError = useSelector((state: RootState) => {
-    return state.auth.signInError
-  })
+
   const classes = useStyles();
   const dispatch = useDispatch();
 
@@ -39,7 +41,7 @@ export const Login: FC = () => {
     password: ''
   });
 
-const loginUser = async (e: React.FormEvent) => {
+const loginUser = (e: React.FormEvent) => {
   e.preventDefault()
   dispatch(signInUser(formState.email, formState.password));
 }
@@ -52,6 +54,12 @@ const handleChange = (e: React.ChangeEvent < HTMLInputElement >) => {
   });
 };
 
+useEffect(() => {
+  return () => {
+    dispatch(resetSignInTransientValues());
+  }
+}, [])
+
   if (user) {
     return <Redirect to='/private' />
   }
@@ -60,49 +68,50 @@ const handleChange = (e: React.ChangeEvent < HTMLInputElement >) => {
     <Container className={classes.root}>
       <div>
       <h1>Login</h1>
-      <form onSubmit={loginUser}>
-      <Grid container spacing={3}>
-      <Grid item xs={12}>
-        <TextField
-        required
-        fullWidth={true}
-        error={signInError ? true : false}
-        id="standard-required"
-        label="Email"
-        name="email"
-        type="email"
-        onChange={handleChange}
-        />
-      </Grid>
-      <Grid item xs={12}>
-        <TextField
-        required
-        fullWidth={true}
-        error={signInError ? true : false}
-        id="standard-required"
-        label="Password"
-        name="password"
-        type="password"
-        onChange={handleChange}
-        />
-        </Grid>
-        <Grid item xs={12}>
-          <FormHelperText
-          className={classes.formHelperText}>
-          {signInError}
-          </FormHelperText>
-        <Button
-        className={classes.loginButton}
-        variant="contained"
-        color="primary"
-        type='submit'
-        onClick={loginUser}
-        >
-          Login
-        </Button>
-        <a href='/signup'>New user? Create an account.</a>
-        </Grid>
-        </Grid>
+      <form onSubmit={loginUser} id="login-form">
+        <Grid container spacing={3}>
+          <Grid item xs={12}>
+            <TextField
+            required
+            fullWidth={true}
+            error={!!signInError}
+            label="Email"
+            name="email"
+            type="email"
+            disabled={signInRequestState === RequestState.FETCHING}
+            onChange={handleChange}
+            />
+          </Grid>
+          <Grid item xs={12}>
+            <TextField
+            required
+            fullWidth={true}
+            error={!!signInError}
+            label="Password"
+            name="password"
+            type="password"
+            disabled={signInRequestState === RequestState.FETCHING}
+            onChange={handleChange}
+            />
+            </Grid>
+            <Grid item xs={12}>
+              <FormHelperText
+              className={classes.formHelperText}>
+              {signInError}
+              </FormHelperText>
+            <Button
+            className={classes.loginButton}
+            variant="contained"
+            color="primary"
+            type='submit'
+            disabled={signInRequestState === RequestState.FETCHING}
+            onClick={loginUser}
+            >
+              Login
+            </Button>
+              <a href='/signup'>New user? Create an account.</a>
+            </Grid>
+          </Grid>
     </form>
     </div>
     </Container>

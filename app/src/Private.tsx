@@ -7,10 +7,9 @@ export const Private: FC = () => {
 
   const dispatch = useDispatch();
 
-  const logoutUser = async () => {
+  const logoutUser = () => {
     dispatch(signOutUser());
   }
-
 
   return (
     <>
