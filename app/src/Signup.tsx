@@ -1,7 +1,7 @@
-import React, { FC, useState } from "react";
+import React, { FC, useEffect, useState } from "react";
 import { Redirect } from "react-router-dom";
 import { useDispatch, useSelector} from "react-redux";
-import { newUser } from "./auth/auth.slice";
+import { newUser, RequestState, resetNewUserTransientValues, resetSignUpErrors } from "./auth/auth.slice";
 import { TextField, Button, FormHelperText, Grid, Container } from '@material-ui/core';
 import { makeStyles } from "@material-ui/core/styles";
 import { RootState } from "./root-reducer";
@@ -25,15 +25,15 @@ const useStyles = makeStyles(() => ({
 }));
 
 export const Signup: FC = () => {
-  const user = useSelector((state: RootState) => {
-    return state.auth.user
+  const { user, signUpUserErr, signUpPasswordErr, newUserRequestState } = useSelector((state: RootState) => {
+    return {
+      user: state.auth.user,
+      signUpUserErr: state.auth.signUpUserErr,
+      signUpPasswordErr: state.auth.signUpPasswordErr,
+      newUserRequestState: state.auth.newUserRequestState
+    }
   })
-  const signUpUserErr = useSelector((state: RootState) => {
-    return state.auth.signUpUserErr
-  })
-  const signUpPasswordErr = useSelector((state: RootState) => {
-    return state.auth.signUpPasswordErr
-  })
+
   const classes = useStyles();
   const dispatch = useDispatch();
 
@@ -42,7 +42,8 @@ export const Signup: FC = () => {
     password: ''
   });
   
-  const createNewUser = async () => {
+  const createNewUser = (e: React.FormEvent) => {
+    e.preventDefault()
     dispatch(newUser(formState.email, formState.password));
   }
 
@@ -54,6 +55,16 @@ export const Signup: FC = () => {
     });
   };
 
+  const resetErrors = () => {
+    dispatch(resetSignUpErrors());
+  }
+
+  useEffect(() => {
+    return () => {
+      dispatch(resetNewUserTransientValues());
+    }
+  }, [])
+
   if (user) {
     return <Redirect to='/private' />
   }
@@ -62,17 +73,17 @@ export const Signup: FC = () => {
     <Container className={classes.root}>
       <div>
       <h1>Create an account</h1>
-      <form>
+      <form onFocus={resetErrors} onSubmit={createNewUser}>
         <Grid container spacing={3}>
           <Grid item xs={12}>
             <TextField 
             required 
             fullWidth={true}
-            error={signUpUserErr ? true : false}
-            id="standard-required" 
+            error={!!signUpUserErr}
             label="Email" 
             name="email"
             type="email"
+            disabled={newUserRequestState === RequestState.FETCHING}
             onChange={handleChange}
             />
           </Grid>
@@ -80,11 +91,11 @@ export const Signup: FC = () => {
             <TextField 
             required 
             fullWidth={true}
-            error={signUpPasswordErr ? true : false}
-            id="standard-required" 
+            error={!!signUpPasswordErr}
             label="Password"
             name="password"
             type="password"
+            disabled={newUserRequestState === RequestState.FETCHING}
             onChange={handleChange} 
             />
             <FormHelperText 
@@ -97,6 +108,8 @@ export const Signup: FC = () => {
             className={classes.signupButton}
             variant="contained" 
             color="primary"
+            type='submit'
+            disabled={newUserRequestState === RequestState.FETCHING}
             onClick={createNewUser}
             >
               Signup

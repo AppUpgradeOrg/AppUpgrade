@@ -1,9 +1,23 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 import { app } from "../firebase/firebase.service";
 import { AppThunk } from "../store";
+
+export enum RequestState {
+
+  INITIAL,
+
+  FETCHING,
+
+  SUCCESS,
+
+  FAILURE
+}
+
 export interface AuthState {
   isAuthenticated: boolean;
   user: AppUser | undefined | null;
+  newUserRequestState: RequestState;
+  signInRequestState: RequestState;
   signInError: string | undefined;
   signUpUserErr: string | undefined;
   signUpPasswordErr: string | undefined;
@@ -16,6 +30,8 @@ export interface AppUser {
 const initialState: AuthState = {
   isAuthenticated: false,
   user: undefined, 
+  newUserRequestState: RequestState.INITIAL,
+  signInRequestState: RequestState.INITIAL,
   signInError: undefined,
   signUpUserErr: undefined,
   signUpPasswordErr: undefined
@@ -40,6 +56,19 @@ const auth = createSlice({
     },
     setSignUpPasswordErr(state, action: PayloadAction<{ signUpPasswordErr: string | undefined }>) {
       state.signUpPasswordErr = action.payload.signUpPasswordErr;
+    },
+    setNewUserRequestState(state, action: PayloadAction<{ newUserRequestState: RequestState }>) {
+      state.newUserRequestState = action.payload.newUserRequestState;
+    },
+    resetNewUserTransientValues(state) {
+      state.newUserRequestState = initialState.newUserRequestState;
+    },
+    setSignInRequestState(state, action: PayloadAction<{ signInRequestState: RequestState }>) {
+      state.signInRequestState = action.payload.signInRequestState;
+    },
+    resetSignInTransientValues(state) {
+      state.signInRequestState = initialState.signInRequestState;
+      state.signInError = initialState.signInError;
     }
   }
 });
@@ -49,8 +78,19 @@ export const {
   setUser, 
   setSignInError,
   setSignUpUserErr,
-  setSignUpPasswordErr
+  setSignUpPasswordErr,
+  setNewUserRequestState,
+  resetNewUserTransientValues,
+  setSignInRequestState,
+  resetSignInTransientValues
 } = auth.actions;
+
+export const resetSignUpErrors = (): AppThunk => async dispatch => {
+ // Clear out any existing errors.
+ dispatch(setSignUpUserErr({ signUpUserErr: undefined }));
+ dispatch(setSignUpPasswordErr({ signUpPasswordErr: undefined }));
+
+}
 
 export const initializeUser = (): AppThunk => async dispatch => {
   const { currentUser } = app.auth();
@@ -69,15 +109,18 @@ export const initializeUser = (): AppThunk => async dispatch => {
 
 export const newUser = (email: string, password: string):AppThunk => async dispatch => {
   try {
+    dispatch(resetSignUpErrors());
+    dispatch(setNewUserRequestState({ newUserRequestState: RequestState.FETCHING }));
     const credential = await app.auth().createUserWithEmailAndPassword(email, password)
     if (credential.user) {
+      dispatch(setNewUserRequestState({ newUserRequestState: RequestState.SUCCESS }));
       dispatch(setUser({ user: { email: credential.user.email! }}));
     } else {
+      dispatch(setNewUserRequestState({ newUserRequestState: RequestState.FAILURE }));
       dispatch(setUser({ user: null }));
-      dispatch(setSignUpUserErr({ signUpUserErr: undefined }));
-      dispatch(setSignUpPasswordErr({ signUpPasswordErr: undefined }));
     }
   } catch (err) {
+    dispatch(setNewUserRequestState({ newUserRequestState: RequestState.FAILURE }));
     switch (err.code) {
       case 'auth/email-already-in-use':
         dispatch(setSignUpUserErr({signUpUserErr: 'Looks like you already have an account. Click Login.'}))
@@ -96,19 +139,25 @@ export const newUser = (email: string, password: string):AppThunk => async dispa
 
 export const signInUser = (email: string, password: string): AppThunk => async dispatch => {
   try {
+    dispatch(setSignInRequestState({ signInRequestState: RequestState.FETCHING }));
     const credential = await app.auth().signInWithEmailAndPassword(email, password);
+
     if (credential.user) {
+      dispatch(setSignInRequestState({ signInRequestState: RequestState.SUCCESS }));
       dispatch(setUser({ user: { email: credential.user.email! }}));
     } else {
+      dispatch(setSignInRequestState({ signInRequestState: RequestState.FAILURE }));
       dispatch(setUser({ user: null }));
     }
   } catch (err) {
+    dispatch(setSignInRequestState({ signInRequestState: RequestState.FAILURE }));
     dispatch(setSignInError({ signInError: 'Incorrect, email or password'}))
   }
 }
 
-export const signOutUser = (): AppThunk => async () => {
+export const signOutUser = (): AppThunk => async dispatch => {
   await app.auth().signOut();
+  dispatch(setUser({ user: null }));
 }
 
 export const authReducer = auth.reducer;
