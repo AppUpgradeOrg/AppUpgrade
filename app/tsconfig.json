@@ -1,26 +1,39 @@
 {
+  "files": [],
   "compilerOptions": {
+    "module": "commonjs",
     "target": "es5",
     "lib": [
       "dom",
       "dom.iterable",
       "esnext"
     ],
-    "allowJs": true,
-    "skipLibCheck": true,
-    "esModuleInterop": true,
-    "allowSyntheticDefaultImports": true,
+    "declaration": true,
+    "declarationMap": true,
+    "sourceMap": true,
     "strict": true,
-    "forceConsistentCasingInFileNames": true,
-    "noFallthroughCasesInSwitch": true,
-    "module": "esnext",
-    "moduleResolution": "node",
-    "resolveJsonModule": true,
-    "isolatedModules": true,
-    "noEmit": true,
-    "jsx": "react-jsx"
+    "esModuleInterop": true,
+    "noImplicitAny": true,
+    "moduleResolution": "node"
   },
+  "references": [
+    {
+      "path": "common"
+    },
+    {
+      "path": "app-upgrade-client"
+    },
+    {
+      "path": "scripts"
+    },
+    {
+      "path": "functions"
+    }
+  ],
   "include": [
-    "src"
+    "common/src",
+    "app-upgrade-client/src",
+    "scripts/src",
+    "functions/src"
   ]
 }

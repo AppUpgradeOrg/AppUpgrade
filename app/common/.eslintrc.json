@@ -1,0 +1,9 @@
+{
+  "extends": ["prettier", "prettier/@typescript-eslint"],
+  "plugins": ["prettier"],
+  "parser": "babel-eslint",
+  "rules": {
+    "import/prefer-default-export": "off",
+    "prettier/prettier": "error"
+  }
+}
