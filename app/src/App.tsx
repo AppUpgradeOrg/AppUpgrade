@@ -1,7 +1,5 @@
 import React from 'react';
-import { useSelector } from "react-redux";
-import { RootState } from "./root-reducer";
-import { Route, BrowserRouter as Router, Switch, Redirect } from "react-router-dom";
+import { Route, BrowserRouter as Router, Switch} from "react-router-dom";
 import './App.css';
 import { Provider } from 'react-redux';
 import { store } from './store';
