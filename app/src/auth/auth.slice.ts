@@ -1,6 +1,6 @@
-import { createSlice, PayloadAction } from "@reduxjs/toolkit";
-import { app } from "../firebase/firebase.service";
-import { AppThunk } from "../store";
+import { createSlice, PayloadAction } from '@reduxjs/toolkit';
+import { app } from '../firebase/firebase.service';
+import { AppThunk } from '../store';
 
 export enum RequestState {
   INITIAL,
@@ -9,7 +9,7 @@ export enum RequestState {
 
   SUCCESS,
 
-  FAILURE,
+  FAILURE
 }
 
 export interface AuthState {
@@ -33,11 +33,11 @@ const initialState: AuthState = {
   signInRequestState: RequestState.INITIAL,
   signInError: undefined,
   signUpUserErr: undefined,
-  signUpPasswordErr: undefined,
+  signUpPasswordErr: undefined
 };
 
 const auth = createSlice({
-  name: "auth",
+  name: 'auth',
   initialState,
   reducers: {
     setAuthenticated(
@@ -86,8 +86,8 @@ const auth = createSlice({
     resetSignInTransientValues(state) {
       state.signInRequestState = initialState.signInRequestState;
       state.signInError = initialState.signInError;
-    },
-  },
+    }
+  }
 });
 
 export const {
@@ -99,7 +99,7 @@ export const {
   setNewUserRequestState,
   resetNewUserTransientValues,
   setSignInRequestState,
-  resetSignInTransientValues,
+  resetSignInTransientValues
 } = auth.actions;
 
 export const resetSignUpErrors = (): AppThunk => async (dispatch) => {
@@ -154,23 +154,23 @@ export const newUser = (email: string, password: string): AppThunk => async (
       setNewUserRequestState({ newUserRequestState: RequestState.FAILURE })
     );
     switch (err.code) {
-      case "auth/email-already-in-use":
+      case 'auth/email-already-in-use':
         dispatch(
           setSignUpUserErr({
             signUpUserErr:
-              "Looks like you already have an account. Click Login.",
+              'Looks like you already have an account. Click Login.'
           })
         );
         break;
-      case "auth/invalid-email":
+      case 'auth/invalid-email':
         dispatch(
-          setSignUpUserErr({ signUpUserErr: "Please enter a valid email" })
+          setSignUpUserErr({ signUpUserErr: 'Please enter a valid email' })
         );
         break;
-      case "auth/weak-password":
+      case 'auth/weak-password':
         dispatch(
           setSignUpPasswordErr({
-            signUpPasswordErr: "Password must be at least 6 characters",
+            signUpPasswordErr: 'Password must be at least 6 characters'
           })
         );
         break;
@@ -206,7 +206,7 @@ export const signInUser = (email: string, password: string): AppThunk => async (
     dispatch(
       setSignInRequestState({ signInRequestState: RequestState.FAILURE })
     );
-    dispatch(setSignInError({ signInError: "Incorrect, email or password" }));
+    dispatch(setSignInError({ signInError: 'Incorrect, email or password' }));
   }
 };
 
