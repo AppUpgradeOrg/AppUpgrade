@@ -1,7 +1,7 @@
-import { Button } from "@material-ui/core";
-import React, { FC } from "react";
-import { useDispatch } from "react-redux";
-import { signOutUser } from "./auth/auth.slice";
+import { Button } from '@material-ui/core';
+import React, { FC } from 'react';
+import { useDispatch } from 'react-redux';
+import { signOutUser } from './auth/auth.slice';
 
 export const Private: FC = () => {
   const dispatch = useDispatch();

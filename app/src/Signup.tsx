@@ -3,36 +3,36 @@ import {
   Container,
   FormHelperText,
   Grid,
-  TextField,
-} from "@material-ui/core";
-import { makeStyles } from "@material-ui/core/styles";
-import React, { FC, useEffect, useState } from "react";
-import { useDispatch, useSelector } from "react-redux";
-import { Link, Redirect } from "react-router-dom";
+  TextField
+} from '@material-ui/core';
+import { makeStyles } from '@material-ui/core/styles';
+import React, { FC, useEffect, useState } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
+import { Link, Redirect } from 'react-router-dom';
 import {
   newUser,
   RequestState,
   resetNewUserTransientValues,
-  resetSignUpErrors,
-} from "./auth/auth.slice";
-import { RootState } from "./root-reducer";
+  resetSignUpErrors
+} from './auth/auth.slice';
+import { RootState } from './root-reducer';
 
 const useStyles = makeStyles(() => ({
   root: {
-    minHeight: "100vh",
-    display: "flex",
-    flexDirection: "column",
-    "& h2": {
-      textAlign: "center",
+    minHeight: '100vh',
+    display: 'flex',
+    flexDirection: 'column',
+    '& h2': {
+      textAlign: 'center'
     },
-    maxWidth: "600px",
+    maxWidth: '600px'
   },
   formHelperText: {
-    color: "#ff6961",
+    color: '#ff6961'
   },
   signupButton: {
-    margin: "20px",
-  },
+    margin: '20px'
+  }
 }));
 
 export const Signup: FC = () => {
@@ -40,13 +40,13 @@ export const Signup: FC = () => {
     user,
     signUpUserErr,
     signUpPasswordErr,
-    newUserRequestState,
+    newUserRequestState
   } = useSelector((state: RootState) => {
     return {
       user: state.auth.user,
       signUpUserErr: state.auth.signUpUserErr,
       signUpPasswordErr: state.auth.signUpPasswordErr,
-      newUserRequestState: state.auth.newUserRequestState,
+      newUserRequestState: state.auth.newUserRequestState
     };
   });
 
@@ -57,8 +57,8 @@ export const Signup: FC = () => {
     email: string;
     password: string;
   }>({
-    email: "",
-    password: "",
+    email: '',
+    password: ''
   });
 
   const createNewUser = (e: React.FormEvent) => {
@@ -70,7 +70,7 @@ export const Signup: FC = () => {
     const { name, value } = e.target;
     setFormState({
       ...formState,
-      [name]: value,
+      [name]: value
     });
   };
 

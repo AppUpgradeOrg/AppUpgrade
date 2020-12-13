@@ -1,5 +1,5 @@
-import { CircularProgress } from "@material-ui/core";
-import React, { CSSProperties, FC } from "react";
+import { CircularProgress } from '@material-ui/core';
+import React, { CSSProperties, FC } from 'react';
 
 type LoadingSpinnerProps = {
   withText?: string;
@@ -7,24 +7,24 @@ type LoadingSpinnerProps = {
 };
 
 const defaultProps: LoadingSpinnerProps = {
-  withText: "Loading",
-  hideText: false,
+  withText: 'Loading',
+  hideText: false
 };
 
 const styles: { [s: string]: CSSProperties } = {
   root: {
-    display: "flex",
-    flexDirection: "column",
-    justifyContent: "center",
-    alignContent: "center",
-    alignItems: "center",
-  },
+    display: 'flex',
+    flexDirection: 'column',
+    justifyContent: 'center',
+    alignContent: 'center',
+    alignItems: 'center'
+  }
 };
 
 export const LoadingSpinner: FC<LoadingSpinnerProps> = (props) => {
   const effectiveProps = {
     ...defaultProps,
-    ...props,
+    ...props
   };
 
   return (

@@ -1,13 +1,13 @@
-import React from "react";
-import { Provider } from "react-redux";
-import { BrowserRouter as Router, Route, Switch } from "react-router-dom";
-import "./App.css";
-import { Loading } from "./Loading";
-import { Login } from "./Login";
-import { Private } from "./Private";
-import { ProtectedRoute } from "./protected-route";
-import { Signup } from "./Signup";
-import { store } from "./store";
+import React from 'react';
+import { Provider } from 'react-redux';
+import { BrowserRouter as Router, Route, Switch } from 'react-router-dom';
+import './App.css';
+import { Loading } from './Loading';
+import { Login } from './Login';
+import { Private } from './Private';
+import { ProtectedRoute } from './protected-route';
+import { Signup } from './Signup';
+import { store } from './store';
 
 export function App() {
   return (
