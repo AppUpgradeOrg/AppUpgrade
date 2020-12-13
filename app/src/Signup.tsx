@@ -1,5 +1,5 @@
 import React, { FC, useEffect, useState } from "react";
-import { Redirect } from "react-router-dom";
+import { Link, Redirect } from "react-router-dom";
 import { useDispatch, useSelector} from "react-redux";
 import { newUser, RequestState, resetNewUserTransientValues, resetSignUpErrors } from "./auth/auth.slice";
 import { TextField, Button, FormHelperText, Grid, Container } from '@material-ui/core';
@@ -41,7 +41,7 @@ export const Signup: FC = () => {
     email: '',
     password: ''
   });
-  
+
   const createNewUser = (e: React.FormEvent) => {
     e.preventDefault()
     dispatch(newUser(formState.email, formState.password));
@@ -76,11 +76,11 @@ export const Signup: FC = () => {
       <form onFocus={resetErrors} onSubmit={createNewUser}>
         <Grid container spacing={3}>
           <Grid item xs={12}>
-            <TextField 
-            required 
+            <TextField
+            required
             fullWidth={true}
             error={!!signUpUserErr}
-            label="Email" 
+            label="Email"
             name="email"
             type="email"
             disabled={newUserRequestState === RequestState.FETCHING}
@@ -88,25 +88,25 @@ export const Signup: FC = () => {
             />
           </Grid>
           <Grid item xs={12}>
-            <TextField 
-            required 
+            <TextField
+            required
             fullWidth={true}
             error={!!signUpPasswordErr}
             label="Password"
             name="password"
             type="password"
             disabled={newUserRequestState === RequestState.FETCHING}
-            onChange={handleChange} 
+            onChange={handleChange}
             />
-            <FormHelperText 
+            <FormHelperText
             className={classes.formHelperText}>
             {signUpPasswordErr || signUpUserErr}
-            </FormHelperText>  
+            </FormHelperText>
           </Grid>
           <Grid item xs={12}>
-            <Button 
+            <Button
             className={classes.signupButton}
-            variant="contained" 
+            variant="contained"
             color="primary"
             type='submit'
             disabled={newUserRequestState === RequestState.FETCHING}
@@ -114,7 +114,7 @@ export const Signup: FC = () => {
             >
               Signup
             </Button>
-            <a href='/login'>Already have an account?</a>
+            <Link to='/login'>Already have an account?</Link>
           </Grid>
         </Grid>
       </form>
