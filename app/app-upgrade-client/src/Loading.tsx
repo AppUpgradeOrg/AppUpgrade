@@ -30,7 +30,7 @@ export const Loading: FC = () => {
         </Grid>
       )}
       {user === null && <Redirect to="/login" />}
-      {user && <Redirect to="/private" />}
+      {user && <Redirect to="/dashboard" />}
     </>
   );
 };

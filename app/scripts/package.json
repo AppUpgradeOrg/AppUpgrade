@@ -1,0 +1,33 @@
+{
+  "name": "@app-upgrade/scripts",
+  "license": "MIT",
+  "version": "0.1.0",
+  "description": "Useful scripts",
+  "scripts": {
+    "build": "tsc",
+    "lint": "eslint --ext .js,.ts src",
+    "lint:fix": "eslint --fix --ext .js,.ts src"
+  },
+  "main": "lib/index.js",
+  "types": "dist/index.d.ts",
+  "engines": {
+    "node": "10"
+  },
+  "dependencies": {
+    "firebase-admin": "^8.6.0",
+    "firebase-tools": "^8.0.1",
+    "@app-upgrade/common": "0.1.0"
+  },
+  "devDependencies": {
+    "typescript": "4.1.2",
+    "@typescript-eslint/eslint-plugin": "^4.0.0",
+    "@typescript-eslint/parser": "^4.0.0",
+    "eslint": "^7.6.0",
+    "eslint-plugin-import": "^2.22.0",
+    "eslint-config-prettier": "^7.0.0",
+    "eslint-plugin-prettier": "^3.2.0",
+    "prettier": "^2.2.1",
+    "prettier-plugin-organize-imports": "^1.1.1",
+    "babel-eslint": "^10.0.0"
+  }
+}

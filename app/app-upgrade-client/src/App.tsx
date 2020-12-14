@@ -2,9 +2,9 @@ import React from 'react';
 import { Provider } from 'react-redux';
 import { BrowserRouter as Router, Route, Switch } from 'react-router-dom';
 import './App.css';
+import { Dashboard } from './dashboard';
 import { Loading } from './Loading';
 import { Login } from './Login';
-import { Private } from './Private';
 import { ProtectedRoute } from './protected-route';
 import { Signup } from './Signup';
 import { store } from './store';
@@ -24,8 +24,8 @@ export function App() {
               <Login />
             </div>
           </Route>
-          <ProtectedRoute path="/private">
-            <Private />
+          <ProtectedRoute path="/dashboard">
+            <Dashboard />
           </ProtectedRoute>
           <Route path="/">
             {/* Home */}
