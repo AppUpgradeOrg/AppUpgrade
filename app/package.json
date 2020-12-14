@@ -1,69 +1,27 @@
 {
-  "name": "appupgrade",
-  "version": "0.1.0",
+  "name": "@app-upgrade/manager",
+  "version": "1.0.0",
+  "main": "index.js",
+  "license": "MIT",
   "private": true,
-  "dependencies": {
-    "@material-ui/core": "^4.11.2",
-    "@reduxjs/toolkit": "^1.5.0",
-    "firebase": "^8.1.1",
-    "react": "^17.0.1",
-    "react-dom": "^17.0.1",
-    "react-redux": "^7.2.2",
-    "react-router-dom": "^5.2.0",
-    "react-scripts": "4.0.1",
-    "redux": "^4.0.5",
-    "redux-thunk": "^2.3.0"
-  },
-  "devDependencies": {
-    "@types/node": "^12.0.0",
-    "@types/react": "^16.9.53",
-    "@types/react-dom": "^16.9.8",
-    "@types/react-redux": "^7.1.11",
-    "@types/react-router": "^5.1.8",
-    "@types/react-router-dom": "^5.1.6",
-    "@typescript-eslint/eslint-plugin": "^4.0.0",
-    "@typescript-eslint/parser": "^4.0.0",
-    "babel-eslint": "^10.0.0",
-    "eslint": "^7.5.0",
-    "eslint-config-prettier": "^7.0.0",
-    "eslint-config-react-app": "^6.0.0",
-    "eslint-plugin-flowtype": "^5.2.0",
-    "eslint-plugin-import": "^2.22.0",
-    "eslint-plugin-jsx-a11y": "^6.3.1",
-    "eslint-plugin-prettier": "^3.2.0",
-    "eslint-plugin-react": "^7.20.3",
-    "eslint-plugin-react-hooks": "^4.0.8",
-    "husky": "^4.3.6",
-    "prettier": "^2.2.1",
-    "prettier-plugin-organize-imports": "^1.1.1",
-    "typescript": "4.1.2"
-  },
   "scripts": {
-    "start": "react-scripts start",
-    "build": "react-scripts build",
-    "lint": "eslint --ext .js,.jsx,.ts,.tsx src",
-    "lint:fix": "eslint --fix --ext .js,.jsx,.ts,.tsx src"
+    "deploy:qa": "yarn deploy:qa:functions && yarn deploy:qa:hosting",
+    "deploy:qa:functions": "firebase deploy --project=qa --only functions",
+    "deploy:qa:hosting": "yarn build-web:qa && firebase deploy --project=qa --only hosting",
+    "deploy:production": "yarn deploy:production:functions && yarn deploy:production:hosting",
+    "deploy:production:functions": "firebase deploy --project=production --only functions",
+    "deploy:production:hosting": "yarn build-web:production && firebase deploy --project=production --only hosting",
+    "build-web:qa": "yarn --cwd app-upgrade-client build:qa && rm -rf dist && cp -r app-upgrade-client/build dist",
+    "build-web:production": "yarn --cwd app-upgrade-client build:production && rm -rf dist && cp -r app-upgrade-client/build dist",
+    "clean": "source .bin/clean.sh",
+    "build": "source .bin/build.sh",
+    "start": "yarn --cwd app-upgrade-client start",
+    "watch-common": "yarn --cwd common watch"
   },
-  "eslintConfig": {
-    "extends": [
-      "react-app"
-    ]
-  },
-  "browserslist": {
-    "production": [
-      ">0.2%",
-      "not dead",
-      "not op_mini all"
-    ],
-    "development": [
-      "last 1 chrome version",
-      "last 1 firefox version",
-      "last 1 safari version"
-    ]
-  },
-  "husky": {
-    "hooks": {
-      "pre-commit": "yarn lint"
-    }
-  }
+  "workspaces": [
+    "app-upgrade-client",
+    "common",
+    "functions",
+    "scripts"
+  ]
 }

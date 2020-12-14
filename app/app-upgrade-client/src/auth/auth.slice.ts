@@ -1,16 +1,7 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 import { app } from '../firebase/firebase.service';
 import { AppThunk } from '../store';
-
-export enum RequestState {
-  INITIAL,
-
-  FETCHING,
-
-  SUCCESS,
-
-  FAILURE
-}
+import { RequestState } from '../types';
 
 export interface AuthState {
   isAuthenticated: boolean;

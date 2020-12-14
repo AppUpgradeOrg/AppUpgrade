@@ -10,12 +10,12 @@ import React, { FC, useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { Link, Redirect } from 'react-router-dom';
 import {
-  RequestState,
-  resetSignInErrors,
-  resetSignInTransientValues,
-  signInUser
+  newUser,
+  resetNewUserTransientValues,
+  resetSignUpErrors
 } from './auth/auth.slice';
 import { RootState } from './root-reducer';
+import { RequestState } from './types';
 
 const useStyles = makeStyles(() => ({
   root: {
@@ -30,21 +30,25 @@ const useStyles = makeStyles(() => ({
   formHelperText: {
     color: '#ff6961'
   },
-  loginButton: {
+  signupButton: {
     margin: '20px'
   }
 }));
 
-export const Login: FC = () => {
-  const { user, signInError, signInRequestState } = useSelector(
-    (state: RootState) => {
-      return {
-        user: state.auth.user,
-        signInError: state.auth.signInError,
-        signInRequestState: state.auth.signInRequestState
-      };
-    }
-  );
+export const Signup: FC = () => {
+  const {
+    user,
+    signUpUserErr,
+    signUpPasswordErr,
+    newUserRequestState
+  } = useSelector((state: RootState) => {
+    return {
+      user: state.auth.user,
+      signUpUserErr: state.auth.signUpUserErr,
+      signUpPasswordErr: state.auth.signUpPasswordErr,
+      newUserRequestState: state.auth.newUserRequestState
+    };
+  });
 
   const classes = useStyles();
   const dispatch = useDispatch();
@@ -57,9 +61,9 @@ export const Login: FC = () => {
     password: ''
   });
 
-  const loginUser = (e: React.FormEvent) => {
+  const createNewUser = (e: React.FormEvent) => {
     e.preventDefault();
-    dispatch(signInUser(formState.email, formState.password));
+    dispatch(newUser(formState.email, formState.password));
   };
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -71,34 +75,38 @@ export const Login: FC = () => {
   };
 
   const resetErrors = () => {
-    dispatch(resetSignInErrors());
+    dispatch(resetSignUpErrors());
   };
 
   useEffect(() => {
     return () => {
-      dispatch(resetSignInTransientValues());
+      dispatch(resetNewUserTransientValues());
     };
   }, [dispatch]);
 
   if (user) {
-    return <Redirect to="/private" />;
+    if (newUserRequestState !== RequestState.INITIAL) {
+      return <Redirect to="/dashboard?onboarding=true" />;
+    } else {
+      return <Redirect to="/dashboard" />;
+    }
   }
 
   return (
     <Container className={classes.root}>
       <div>
-        <h1>Login</h1>
-        <form onFocus={resetErrors} onSubmit={loginUser} id="login-form">
+        <h1>Create an account</h1>
+        <form onFocus={resetErrors} onSubmit={createNewUser}>
           <Grid container spacing={3}>
             <Grid item xs={12}>
               <TextField
                 required
                 fullWidth={true}
-                error={!!signInError}
+                error={!!signUpUserErr}
                 label="Email"
                 name="email"
                 type="email"
-                disabled={signInRequestState === RequestState.FETCHING}
+                disabled={newUserRequestState === RequestState.FETCHING}
                 onChange={handleChange}
               />
             </Grid>
@@ -106,29 +114,29 @@ export const Login: FC = () => {
               <TextField
                 required
                 fullWidth={true}
-                error={!!signInError}
+                error={!!signUpPasswordErr}
                 label="Password"
                 name="password"
                 type="password"
-                disabled={signInRequestState === RequestState.FETCHING}
+                disabled={newUserRequestState === RequestState.FETCHING}
                 onChange={handleChange}
               />
+              <FormHelperText className={classes.formHelperText}>
+                {signUpPasswordErr || signUpUserErr}
+              </FormHelperText>
             </Grid>
             <Grid item xs={12}>
-              <FormHelperText className={classes.formHelperText}>
-                {signInError}
-              </FormHelperText>
               <Button
-                className={classes.loginButton}
+                className={classes.signupButton}
                 variant="contained"
                 color="primary"
                 type="submit"
-                disabled={signInRequestState === RequestState.FETCHING}
-                onClick={loginUser}
+                disabled={newUserRequestState === RequestState.FETCHING}
+                onClick={createNewUser}
               >
-                Login
+                Signup
               </Button>
-              <Link to="/signup">New user? Create an account.</Link>
+              <Link to="/login">Already have an account?</Link>
             </Grid>
           </Grid>
         </form>
