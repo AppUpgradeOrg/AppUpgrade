@@ -1,0 +1,12 @@
+{
+  "name": "@app-upgrade/build-scripts",
+  "version": "1.0.0",
+  "main": "index.js",
+  "license": "MIT",
+  "dependencies": {
+    "shelljs": "^0.8.4"
+  },
+  "scripts": {
+    "build": "node fns.js"
+  }
+}

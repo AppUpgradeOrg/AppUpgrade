@@ -4,9 +4,12 @@ import { makeStyles } from '@material-ui/core/styles';
 // @ts-ignore
 import Prism from 'prismjs'; // eslint-disable-line
 import React, { FC, useCallback, useEffect, useMemo, useState } from 'react';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
+import { Redirect } from 'react-router';
 import { onboardNewUser } from './onboarding/onboarding.slice';
 import './prism.css';
+import { fetchProjects } from './projects/projects.slice';
+import { RootState } from './root-reducer';
 
 const useStyles = makeStyles((theme) => ({
   paper: {
@@ -33,9 +36,19 @@ export const OnboardingForm: FC = () => {
   const [bootstrapping, setBootstrapping] = useState(false);
   const classes = useStyles();
 
+  const { projects } = useSelector((rootState: RootState) => {
+    return {
+      projects: rootState.projects.projects
+    };
+  });
+
   useEffect(() => {
     Prism.highlightAll();
   }, [bootstrapping]);
+
+  useEffect(() => {
+    dispatch(fetchProjects());
+  }, [dispatch]);
 
   const steps = useMemo(() => {
     return [
@@ -123,33 +136,43 @@ export const OnboardingForm: FC = () => {
     ];
   }, [domainName, environmentName, organizationName, projectName]);
 
-  const onNextButtonPressed = useCallback(() => {
-    if (stepIndex === steps.length - 1) {
-      dispatch(
-        onboardNewUser(
-          organizationName,
-          projectName,
-          environmentName,
-          domainName
-        )
-      );
-      setBootstrapping(true);
-    } else {
-      setStepIndex(stepIndex + 1);
-    }
-  }, [
-    stepIndex,
-    steps.length,
-    dispatch,
-    organizationName,
-    projectName,
-    environmentName,
-    domainName
-  ]);
+  const onNextButtonPressed = useCallback(
+    (event: React.MouseEvent | React.FormEvent) => {
+      event.stopPropagation();
+      event.preventDefault();
+
+      if (stepIndex === steps.length - 1) {
+        dispatch(
+          onboardNewUser(
+            organizationName,
+            projectName,
+            environmentName,
+            domainName
+          )
+        );
+        setBootstrapping(true);
+      } else {
+        setStepIndex(stepIndex + 1);
+      }
+    },
+    [
+      stepIndex,
+      steps.length,
+      dispatch,
+      organizationName,
+      projectName,
+      environmentName,
+      domainName
+    ]
+  );
 
   const onBackButtonPressed = useCallback(() => {
     setStepIndex(stepIndex - 1);
   }, [stepIndex, setStepIndex]);
+
+  if (!bootstrapping && projects.length > 0) {
+    return <Redirect to="/dashboard" />;
+  }
 
   const body = (
     <div
@@ -174,28 +197,30 @@ export const OnboardingForm: FC = () => {
               <p id="onboarding-form-description">
                 Let's get started by setting up your account
               </p>
-              <form id="onboarding-form">{steps[stepIndex].component}</form>
-            </Box>
-            <Box display="flex" justifyContent="flex-end">
-              <Box marginRight={1}>
-                <Button
-                  onClick={onBackButtonPressed}
-                  variant="contained"
-                  disabled={stepIndex === 0}
-                >
-                  Back
-                </Button>
-              </Box>
-              <Button
-                disabled={
-                  stepIndex === steps.length || !steps[stepIndex].isValid()
-                }
-                onClick={onNextButtonPressed}
-                variant="contained"
-                color="primary"
-              >
-                Next
-              </Button>
+              <form id="onboarding-form" onSubmit={onNextButtonPressed}>
+                {steps[stepIndex].component}
+                <Box display="flex" justifyContent="flex-end">
+                  <Box marginRight={1}>
+                    <Button
+                      onClick={onBackButtonPressed}
+                      variant="contained"
+                      disabled={stepIndex === 0}
+                    >
+                      Back
+                    </Button>
+                  </Box>
+                  <Button
+                    type="submit"
+                    disabled={
+                      stepIndex === steps.length || !steps[stepIndex].isValid()
+                    }
+                    variant="contained"
+                    color="primary"
+                  >
+                    Next
+                  </Button>
+                </Box>
+              </form>
             </Box>
           </>
         )}

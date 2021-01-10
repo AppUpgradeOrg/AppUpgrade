@@ -2,6 +2,7 @@ import { OnboardNewUserDto } from '@app-upgrade/common';
 import * as admin from 'firebase-admin';
 import * as functions from 'firebase-functions';
 import { createAccountIfNotExist } from './create-account-if-not-exist';
+import { getProjects as getProjectsFn } from './get-projects';
 import { onboardNewUser as onboardNewUserFn } from './onboard-new-user';
 
 admin.initializeApp();
@@ -29,3 +30,9 @@ export const onboardNewUser = functions.https.onCall(
     }
   }
 );
+
+export const getProjects = functions.https.onCall(async (data, context) => {
+  if (!context.auth?.uid) return [];
+
+  return getProjectsFn(admin, context.auth.uid);
+});
