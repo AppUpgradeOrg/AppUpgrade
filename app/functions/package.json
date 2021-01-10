@@ -17,9 +17,8 @@
   },
   "main": "dist/index.js",
   "dependencies": {
-    "@google-cloud/storage": "^5.7.1",
     "@types/uuid": "^8.3.0",
-    "firebase-admin": "^8.10.0",
+    "firebase-admin": "^9.4.2",
     "firebase-functions": "^3.6.1",
     "uuid": "^8.3.2"
   },
