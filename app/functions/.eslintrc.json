@@ -1,7 +1,7 @@
 {
   "extends": ["prettier", "prettier/@typescript-eslint"],
   "plugins": ["prettier"],
-  "parser": "babel-eslint",
+  "parser": "@typescript-eslint/parser",
   "rules": {
     "import/prefer-default-export": "off",
     "prettier/prettier": "error"
