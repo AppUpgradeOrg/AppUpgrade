@@ -3,6 +3,7 @@ import * as functions from 'firebase-functions';
 import { v4 as uuidv4 } from 'uuid';
 import { createAccountIfNotExist } from './create-account-if-not-exist';
 import { FirebaseAdmin } from './types';
+const { Storage } = require('@google-cloud/storage');
 
 export const onboardNewUser = async (
   admin: FirebaseAdmin,
@@ -13,6 +14,11 @@ export const onboardNewUser = async (
   const organizationId = uuidv4();
   const projectId = uuidv4();
   const environmentId = uuidv4();
+
+  const storage = new Storage();
+  const myBucket = storage.bucket('app-upgrade-qa');
+  const file = myBucket.file('my-file.txt');
+  const contents = 'This is the contents of the file.';
 
   if (!!authUid) {
     try {
@@ -43,10 +49,12 @@ export const onboardNewUser = async (
             environmentName: onboardNewUserDto.environmentName,
             domains: [onboardNewUserDto.domainName],
             createdOn: admin.firestore.Timestamp.now()
-          })
-      ]);
+          }),
 
+        file.save(contents)
+      ]);
       console.log('Data added successfully');
+      return;
     } catch (error) {
       throw new functions.https.HttpsError('unknown', error);
     }

@@ -9,7 +9,7 @@
     "target": "es2017",
     "skipLibCheck": true,
     "composite": true,
-    "rootDir": "src",
+    "rootDir": "src"
   },
   "compileOnSave": true,
   "include": [
