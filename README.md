@@ -1,2 +1,2 @@
 # appupgrade
-Monorepo for all &lt;AppUpgrade /> code assets
+Monorepo for all &lt;AppUpgrade /> code assets.
