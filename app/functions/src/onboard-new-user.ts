@@ -13,10 +13,11 @@ export const onboardNewUser = async (
   const organizationId = uuidv4();
   const projectId = uuidv4();
   const environmentId = uuidv4();
-  const myBucket = admin.storage().bucket('app-upgrade-qa');
+  const myBucket = admin.storage().bucket();
   const file = myBucket.file(
     `cdn/organizations/${organizationId}/projects/${projectId}/environments/${environmentId}/script.js`
   );
+
   const contents = `console.log(${projectId})`;
 
   if (!!authUid) {

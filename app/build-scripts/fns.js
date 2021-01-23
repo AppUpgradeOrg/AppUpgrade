@@ -27,8 +27,9 @@ shell.rm('-rf', 'dist')
 
 const tsconfigJson = JSON.parse(shell.cat(path.join(functionsPath, "tsconfig.json")).toString());
 delete tsconfigJson.references;
+delete tsconfigJson.compilerOptions.composite;
 
 shell.echo(JSON.stringify(tsconfigJson, null, 2)).to("tsconfig.json")
 
-shell.exec('yarn build')
-
+shell.exec('yarn');
+shell.exec('yarn build');

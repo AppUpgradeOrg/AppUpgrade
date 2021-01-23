@@ -1,0 +1,9 @@
+#!/bin/sh
+
+capturedir
+cd $APP_UPGRADE_HOME/app/.bin
+pwd
+ls
+./install
+cd $captured
+unset captured

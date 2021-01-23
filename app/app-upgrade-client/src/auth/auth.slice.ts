@@ -1,5 +1,4 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
-import { app } from '../firebase/firebase.service';
 import { AppThunk } from '../store';
 import { RequestState } from '../types';
 
@@ -103,13 +102,17 @@ export const resetSignInErrors = (): AppThunk => async (dispatch) => {
   dispatch(setSignInError({ signInError: undefined }));
 };
 
-export const initializeUser = (): AppThunk => async (dispatch) => {
-  const { currentUser } = app.auth();
+export const initializeUser = (): AppThunk => async (
+  dispatch,
+  getState,
+  { firebaseApp }
+) => {
+  const { currentUser } = firebaseApp.auth();
   if (currentUser) {
     dispatch(setUser({ user: { email: currentUser.email! } }));
   }
 
-  app.auth().onAuthStateChanged(async (result) => {
+  firebaseApp.auth().onAuthStateChanged(async (result) => {
     if (result) {
       dispatch(setUser({ user: { email: result.email! } }));
     } else {
@@ -119,14 +122,16 @@ export const initializeUser = (): AppThunk => async (dispatch) => {
 };
 
 export const newUser = (email: string, password: string): AppThunk => async (
-  dispatch
+  dispatch,
+  getState,
+  { firebaseApp }
 ) => {
   try {
     dispatch(resetSignUpErrors());
     dispatch(
       setNewUserRequestState({ newUserRequestState: RequestState.FETCHING })
     );
-    const credential = await app
+    const credential = await firebaseApp
       .auth()
       .createUserWithEmailAndPassword(email, password);
     if (credential.user) {
@@ -172,13 +177,15 @@ export const newUser = (email: string, password: string): AppThunk => async (
 };
 
 export const signInUser = (email: string, password: string): AppThunk => async (
-  dispatch
+  dispatch,
+  getState,
+  { firebaseApp }
 ) => {
   try {
     dispatch(
       setSignInRequestState({ signInRequestState: RequestState.FETCHING })
     );
-    const credential = await app
+    const credential = await firebaseApp
       .auth()
       .signInWithEmailAndPassword(email, password);
 
@@ -201,8 +208,12 @@ export const signInUser = (email: string, password: string): AppThunk => async (
   }
 };
 
-export const signOutUser = (): AppThunk => async (dispatch) => {
-  await app.auth().signOut();
+export const signOutUser = (): AppThunk => async (
+  dispatch,
+  getState,
+  { firebaseApp }
+) => {
+  await firebaseApp.auth().signOut();
   dispatch(setUser({ user: null }));
 };
 

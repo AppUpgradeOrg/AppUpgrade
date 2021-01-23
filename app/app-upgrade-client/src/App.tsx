@@ -3,11 +3,18 @@ import { Provider } from 'react-redux';
 import { BrowserRouter as Router, Route, Switch } from 'react-router-dom';
 import './App.css';
 import { Dashboard } from './dashboard';
+import { Environment } from './env';
+import { firebaseConf } from './firebase/firebase.conf';
+import { configureFirebaseApp } from './firebase/firebase.service';
 import { Loading } from './Loading';
 import { Login } from './Login';
 import { ProtectedRoute } from './protected-route';
 import { Signup } from './Signup';
-import { store } from './store';
+import { configureAppStore } from './store';
+
+const environment = new Environment();
+const firebaseApp = configureFirebaseApp(firebaseConf(environment));
+const store = configureAppStore(firebaseApp);
 
 export function App() {
   return (

@@ -1,4 +1,6 @@
-pwd
+#!/bin/sh
+
+cd $APP_UPGRADE_HOME/app
 
 cd common
 yarn build
@@ -11,5 +13,3 @@ yarn build
 
 cd ../scripts
 yarn build
-
-cd ..

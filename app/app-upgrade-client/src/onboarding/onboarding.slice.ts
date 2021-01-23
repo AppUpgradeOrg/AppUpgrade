@@ -1,6 +1,5 @@
 import { OnboardNewUserDto } from '@app-upgrade/common';
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
-import { app } from '../firebase/firebase.service';
 import { AppThunk } from '../store';
 import { RequestState } from '../types';
 
@@ -32,7 +31,7 @@ export const onboardNewUser = (
   projectName: string,
   environmentName: string,
   domainName: string
-): AppThunk => async (dispatch) => {
+): AppThunk => async (dispatch, getState, { firebaseApp }) => {
   dispatch(
     setOnboardNewUserRequestState({ requestState: RequestState.FETCHING })
   );
@@ -46,7 +45,9 @@ export const onboardNewUser = (
       domainName
     };
 
-    await app.functions().httpsCallable('onboardNewUser')(onboardNewUserDto);
+    await firebaseApp.functions().httpsCallable('onboardNewUser')(
+      onboardNewUserDto
+    );
     dispatch(
       setOnboardNewUserRequestState({ requestState: RequestState.SUCCESS })
     );
