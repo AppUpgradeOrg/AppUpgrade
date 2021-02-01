@@ -5,11 +5,7 @@
   "license": "MIT",
   "private": true,
   "scripts": {
-    "deploy": "yarn deploy:functions && yarn deploy:hosting",
-    "deploy:functions": "firebase deploy --project=qa --only functions",
-    "deploy:hosting": "firebase deploy --project=qa --only hosting",
-    "clean": "source .bin/clean.sh",
-    "build": "source .bin/build.sh && rm -rf dist && cp -r app-upgrade-client/build dist",
+    "deploy": "yarn --cwd build-scripts deploy",
     "start": "yarn --cwd app-upgrade-client start",
     "watch-common": "yarn --cwd common watch"
   },
@@ -17,6 +13,7 @@
     "app-upgrade-client",
     "common",
     "functions",
-    "scripts"
+    "scripts",
+    "build-scripts"
   ]
 }

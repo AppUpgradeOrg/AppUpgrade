@@ -14,9 +14,6 @@
     ]
   },
   "functions": {
-    "predeploy": [
-      "yarn --cwd build-scripts build"
-    ],
     "source": "functions-build"
   }
 }

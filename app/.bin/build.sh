@@ -1,4 +1,5 @@
-pwd
+app-upgrade
+cd app
 
 cd common
 yarn build
@@ -11,5 +12,3 @@ yarn build
 
 cd ../scripts
 yarn build
-
-cd ..

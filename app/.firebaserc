@@ -1,6 +1,5 @@
 {
   "projects": {
-    "default": "app-upgrade-qa",
-    "qa": "app-upgrade-qa"
+    "gamma": "app-upgrade-gamma"
   }
 }

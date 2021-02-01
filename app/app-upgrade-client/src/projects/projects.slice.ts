@@ -1,6 +1,5 @@
 import { Project } from '@app-upgrade/common';
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
-import { app } from '../firebase/firebase.service';
 import { AppThunk } from '../store';
 import { RequestState } from '../types';
 
@@ -32,13 +31,17 @@ const projectsSlice = createSlice({
 
 export const { setFetchProjectsRequestState } = projectsSlice.actions;
 
-export const fetchProjects = (): AppThunk => async (dispatch) => {
+export const fetchProjects = (): AppThunk => async (
+  dispatch,
+  getState,
+  { firebaseApp }
+) => {
   dispatch(
     setFetchProjectsRequestState({ requestState: RequestState.FETCHING })
   );
 
   try {
-    const res = await app.functions().httpsCallable('getProjects')();
+    const res = await firebaseApp.functions().httpsCallable('getProjects')();
 
     dispatch(
       projectsSlice.actions.setProjects({ projects: res.data as Project[] })

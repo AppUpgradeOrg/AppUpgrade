@@ -7,6 +7,7 @@
     "shelljs": "^0.8.4"
   },
   "scripts": {
-    "build": "node fns.js"
+    "build:functions": "node fns.js",
+    "deploy": "node deploy.js"
   }
 }

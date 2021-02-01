@@ -1,14 +1,6 @@
 import firebase from 'firebase';
+import { FirebaseConf } from './firebase.conf';
 
-const firebaseConfig = {
-  apiKey: 'AIzaSyCS05MTf2CwsWo9T59mwhEdQUJbxmzBoPU',
-  authDomain: 'app-upgrade-qa.firebaseapp.com',
-  databaseURL: 'https://app-upgrade-qa.firebaseio.com',
-  projectId: 'app-upgrade-qa',
-  storageBucket: 'app-upgrade-qa.appspot.com',
-  messagingSenderId: '61144220322',
-  appId: '1:61144220322:web:c11953c511968b22c58dfb',
-  measurementId: 'G-HXHRQSFST8'
+export const configureFirebaseApp = (conf: FirebaseConf) => {
+  return firebase.initializeApp(conf);
 };
-
-export const app = firebase.initializeApp(firebaseConfig);
