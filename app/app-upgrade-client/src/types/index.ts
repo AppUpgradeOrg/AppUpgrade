@@ -12,8 +12,12 @@ export enum RequestState {
 
 export interface IEnvironment {
   has: (key: string) => boolean;
-  getValue: (key: string) => string | undefined;
-  expectValue: (key: string) => string;
+  getString: (key: string) => string | undefined;
+  expectString: (key: string) => string;
+  getBoolean: (key: string) => boolean | undefined;
+  expectBoolean: (key: string) => boolean;
+  getNumber: (key: string) => number | undefined;
+  expectNumber: (key: string) => number;
 }
 
 export type FirebaseApp = firebase.app.App;

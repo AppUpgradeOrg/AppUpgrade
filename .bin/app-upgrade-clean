@@ -1,0 +1,7 @@
+#!/bin/sh
+
+capturedir
+cd $APP_UPGRADE_HOME/app/.bin
+./clean
+cd $captured
+unset captured

@@ -1,5 +1,7 @@
 {
   "projects": {
-    "gamma": "app-upgrade-gamma"
+    "gamma": "app-upgrade-gamma",
+    "alpha": "app-upgrade-alpha",
+    "default": "app-upgrade-gamma"
   }
 }

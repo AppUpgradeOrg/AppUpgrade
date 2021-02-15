@@ -21,35 +21,6 @@ if (appUpgradeProject.toLowerCase().includes("app") || appUpgradeProject.toLower
   process.exit(-1);
 }
 
-/// Ensure APP_UPGRADE_CREDENTIALS_FOLDER set and valid.
-if (process.argv[3]) {
-  credentialPath = process.argv[3];
-}
-else {
-  const appUpgradeCredentialsFolder = process.env.APP_UPGRADE_CREDENTIALS_FOLDER;
-
-  if (!appUpgradeCredentialsFolder) {
-    console.error("Environment Variable APP_UPGRADE_CREDENTIALS_FOLDER not defined. Will exit.");
-    process.exit(-1);
-  }
-
-  console.log(`APP_UPGRADE_CREDENTIALS_FOLDER: ${appUpgradeCredentialsFolder}`);
-
-  credentialPath = path.join(appUpgradeCredentialsFolder, `app-upgrade-${appUpgradeProject}-firebase-adminsdk.json`);
-}
-
-console.log(credentialPath);
-
-if(!path.isAbsolute(credentialPath)) {
-  console.error(`Credentials Path must be an absolute path. ${credentialPath}. Will exit.`)
-  process.exit(-1);
-}
-
-if(!existsSync(credentialPath)) {
-  console.error(`Credentials path does not exist. ${credentialPath}. Will exit.`)
-  process.exit(-1);
-}
-
 /// Ensure
 const appUpgradeHomeFolderPath = path.resolve(__dirname, '../../');
 const clientDirectory = path.join(appUpgradeHomeFolderPath, 'app', 'app-upgrade-client');
@@ -95,5 +66,3 @@ if (res.code !== 0) {
 }
 
 shell.cd(path.join(appUpgradeHomeFolderPath, 'app'));
-res = shell.exec(`GOOGLE_APPLICATION_CREDENTIALS=${credentialPath} firebase deploy --project=app-upgrade-${appUpgradeProject}`);
-shell.echo(res)

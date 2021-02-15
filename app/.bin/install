@@ -1,0 +1,11 @@
+#!/bin/sh
+
+cd $APP_UPGRADE_HOME/app
+
+cd build-scripts
+
+yarn
+
+cd ..
+
+yarn # yarn will install all dependencies of all sub-projects b/c of yarn workspaces feature.

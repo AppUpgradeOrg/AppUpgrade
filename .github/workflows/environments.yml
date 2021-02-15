@@ -1,0 +1,65 @@
+# This is a basic workflow to help you get started with Actions
+
+name: CI
+
+# Controls when the action will run.
+on:
+  # Triggers the workflow on push or pull request events but only for the main branch
+  push:
+    branches: [ alpha, gamma ]
+
+  # Allows you to run this workflow manually from the Actions tab
+  workflow_dispatch:
+
+# A workflow run is made up of one or more jobs that can run sequentially or in parallel
+jobs:
+  # This workflow contains a single job called "build"
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - uses: actions/setup-node@v2
+        with:
+          node-version: '10'
+
+      - name: Extract branch name
+        shell: bash
+        run: echo "##[set-output name=branch;]$(echo ${GITHUB_REF#refs/heads/})"
+        id: extract_branch
+
+      - name: Extract Firebase Environment
+        shell: bash
+        run: |
+          echo "The selected color is ${{ steps.extract_branch.outputs.branch }}"
+          echo "##[set-output name=fb_env;]$(echo "app-upgrade-${GITHUB_REF#refs/heads/}")"
+        id: update_fb_env
+
+      - name: Environment configuration
+        run: |
+          export APP_UPGRADE_HOME=$(pwd)
+          echo "$APP_UPGRADE_HOME/.bin" >> $GITHUB_PATH
+          echo "$(yarn global bin)" >> $GITHUB_PATH
+
+      - name: Install and Build
+        run: |
+          export APP_UPGRADE_HOME=$(pwd)
+          yarn global add firebase-tools
+          cd $APP_UPGRADE_HOME
+          app-upgrade-install
+          app-upgrade-build
+
+      - name: Prepare Deploy
+        run: |
+          export APP_UPGRADE_HOME=$(pwd)
+          cd $APP_UPGRADE_HOME/app
+          sed -i.bu 's/"source": "functions"/"source": "functions-build"/' firebase.json
+          rm firebase.json.bu
+          yarn deploy ${{ steps.extract_branch.outputs.branch }}
+
+      - uses: w9jds/firebase-action@master
+        with:
+          args: deploy --debug
+        env:
+          FIREBASE_TOKEN: ${{ secrets.FIREBASE_TOKEN }}
+          PROJECT_PATH: app
+          PROJECT_ID: ${{ steps.update_fb_env.outputs.fb_env }}

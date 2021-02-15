@@ -1,5 +1,6 @@
-app-upgrade
-cd app
+#!/bin/sh
+
+cd $APP_UPGRADE_HOME/app
 
 cd common
 yarn build
