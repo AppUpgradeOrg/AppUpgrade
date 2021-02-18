@@ -1,9 +1,11 @@
 {
   "typescript.tsdk": "node_modules/typescript/lib",
   "cSpell.words": [
+    "browserslist",
     "dtos",
     "firestore",
     "gmail",
+    "prismjs",
     "reduxjs",
     "signup",
     "uuidv"

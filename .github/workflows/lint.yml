@@ -1,0 +1,41 @@
+name: CI
+on: push
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v2
+    - uses: actions/setup-node@v2
+      with:
+        node-version: '10'
+    - name: Environment configuration
+      run: |
+        export APP_UPGRADE_HOME=$(pwd)
+        echo "$APP_UPGRADE_HOME/.bin" >> $GITHUB_PATH
+        echo "$(yarn global bin)" >> $GITHUB_PATH
+    - name: Install and Build
+      run: |
+        export APP_UPGRADE_HOME=$(pwd)
+        cd $APP_UPGRADE_HOME
+        app-upgrade-install
+    - name: Build
+      run: |
+        export APP_UPGRADE_HOME=$(pwd)
+        cd $APP_UPGRADE_HOME
+        app-upgrade-build
+    - name: ESLint:functions
+      run: |
+        cd app/functions
+        yarn lint
+    - name: ESLint:common
+      run: |
+        cd app/common
+        yarn lint
+    - name: ESLint:scripts
+      run: |
+        cd app/scripts
+        yarn lint
+    - name: ESLint:app-upgrade-client
+      run: |
+        cd app/app-upgrade-client
+        yarn lint
