@@ -1,2 +1,4 @@
-# appupgrade
-Monorepo for all &lt;AppUpgrade /> code assets.
+# AppUpgrade
+
+See [Engineering Links](https://appupgrade.atlassian.net/wiki/spaces/APPUPGRADE/overview) wiki page for
+information on Developer workflow and Development environment setup.
