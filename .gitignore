@@ -105,3 +105,5 @@ dist
 
 # Ignore MacOSX finder artifacts
 .DS_Store
+
+emulator.data/

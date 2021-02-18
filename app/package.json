@@ -7,7 +7,8 @@
   "scripts": {
     "deploy": "yarn --cwd build-scripts deploy",
     "start": "yarn --cwd app-upgrade-client start",
-    "watch-common": "yarn --cwd common watch"
+    "watch:common": "yarn --cwd common watch",
+    "watch:functions": "yarn --cwd functions watch"
   },
   "workspaces": [
     "app-upgrade-client",
