@@ -2,7 +2,6 @@ import { Environment, Project } from '@app-upgrade/common';
 import { AccountRecord, EnvironmentRecord, ProjectRecord } from './records';
 import { FirebaseAdmin } from './types';
 import { identityConverter } from './utils';
-
 export const getProjects = async (admin: FirebaseAdmin, accountId: string) => {
   // Find account by id
   const accountDoc = await admin
