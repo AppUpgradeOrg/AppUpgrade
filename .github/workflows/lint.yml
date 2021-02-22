@@ -7,7 +7,7 @@ jobs:
     - uses: actions/checkout@v2
     - uses: actions/setup-node@v2
       with:
-        node-version: '10'
+        node-version: '12'
     - name: Environment configuration
       run: |
         export APP_UPGRADE_HOME=$(pwd)
@@ -39,3 +39,7 @@ jobs:
       run: |
         cd app/app-upgrade-client
         yarn lint
+    - name: Spellcheck
+      run: |
+        cd app
+        yarn spellcheck

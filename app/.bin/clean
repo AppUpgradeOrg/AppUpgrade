@@ -1,7 +1,6 @@
 #!/bin/sh
 
-app-upgrade # Go to home folder
-cd app
+cd $APP_UPGRADE_HOME/app # Go to home folder
 
 rm -rf node_modules
 rm -f tsconfig.tsbuildinfo
