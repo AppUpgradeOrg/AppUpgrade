@@ -1,14 +1,16 @@
 import {
+  Box,
   Button,
   Container,
   FormHelperText,
   Grid,
-  TextField
+  TextField,
+  Typography
 } from '@material-ui/core';
 import { makeStyles } from '@material-ui/core/styles';
 import React, { FC, useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { Link, Redirect } from 'react-router-dom';
+import { Redirect } from 'react-router-dom';
 import {
   resetSignInErrors,
   resetSignInTransientValues,
@@ -86,8 +88,10 @@ export const Login: FC = () => {
 
   return (
     <Container className={classes.root}>
-      <div>
-        <h1>Login</h1>
+      <Box marginTop="120px">
+        <Box marginBottom="50px">
+          <Typography variant="h4">Login</Typography>
+        </Box>
         <form onFocus={resetErrors} onSubmit={loginUser} id="login-form">
           <Grid container spacing={3}>
             <Grid item xs={12}>
@@ -128,11 +132,13 @@ export const Login: FC = () => {
               >
                 Login
               </Button>
-              <Link to="/signup">New user? Create an account.</Link>
+              <Button href="/signup" color="primary">
+                New user? Create an account.
+              </Button>
             </Grid>
           </Grid>
         </form>
-      </div>
+      </Box>
     </Container>
   );
 };
