@@ -1,3 +1,4 @@
+import { ThemeProvider } from '@material-ui/core';
 import React from 'react';
 import { Provider } from 'react-redux';
 import { BrowserRouter as Router, Route, Switch } from 'react-router-dom';
@@ -11,6 +12,7 @@ import { Login } from './Login';
 import { ProtectedRoute } from './protected-route';
 import { Signup } from './Signup';
 import { configureAppStore } from './store';
+import { theme } from './theme';
 
 const environment = new Environment();
 const firebaseApp = configureFirebaseApp(firebaseConf(environment));
@@ -18,28 +20,32 @@ const store = configureAppStore(firebaseApp);
 
 export function App() {
   return (
-    <Provider store={store}>
-      <Router>
-        <Switch>
-          <Route path="/signup">
-            <div className="App">
-              <Signup />
-            </div>
-          </Route>
-          <Route path="/login">
-            <div className="App">
-              <Login />
-            </div>
-          </Route>
-          <ProtectedRoute path="/dashboard">
-            <Dashboard />
-          </ProtectedRoute>
-          <Route path="/">
-            {/* Home */}
-            <Loading />
-          </Route>
-        </Switch>
-      </Router>
-    </Provider>
+    <React.Fragment>
+      <Provider store={store}>
+        <ThemeProvider theme={theme}>
+          <Router>
+            <Switch>
+              <Route path="/signup">
+                <div className="App">
+                  <Signup />
+                </div>
+              </Route>
+              <Route path="/login">
+                <div className="App">
+                  <Login />
+                </div>
+              </Route>
+              <ProtectedRoute path="/dashboard">
+                <Dashboard />
+              </ProtectedRoute>
+              <Route path="/">
+                {/* Home */}
+                <Loading />
+              </Route>
+            </Switch>
+          </Router>
+        </ThemeProvider>
+      </Provider>
+    </React.Fragment>
   );
 }
