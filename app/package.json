@@ -8,7 +8,8 @@
     "deploy": "yarn --cwd build-scripts deploy",
     "start": "yarn --cwd app-upgrade-client start",
     "watch:common": "yarn --cwd common watch",
-    "watch:functions": "yarn --cwd functions watch"
+    "watch:functions": "yarn --cwd functions watch",
+    "spellcheck": "cspell \"**/*\""
   },
   "workspaces": [
     "app-upgrade-client",
@@ -16,5 +17,8 @@
     "functions",
     "scripts",
     "build-scripts"
-  ]
+  ],
+  "devDependencies": {
+    "cspell": "^5.2.4"
+  }
 }

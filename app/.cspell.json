@@ -1,0 +1,36 @@
+{
+    "version": "0.2",
+    "$schema": "https://raw.githubusercontent.com/streetsidesoftware/cspell/master/cspell.schema.json",
+    "id": "cspell-project-config",
+    "name": "cspell Project Config",
+    "language": "en",
+    "words": [
+        "browserslist",
+        "dtos",
+        "firestore",
+        "flowtype",
+        "gmail",
+        "prismjs",
+        "reduxjs",
+        "signup",
+        "uuidv",
+        "webfonts"
+    ],
+    "maxNumberOfProblems": 1000,
+    "ignorePaths": [
+        "**/node_modules/**",
+        "**/yarn.lock",
+        "**/dist/**",
+        "**/tsconfig.tsbuildinfo",
+        "**/*.log",
+        "**/*.data",
+        "**/*.data/**",
+        "**/prism.css",
+        "**/build/**"
+    ],
+    "dictionaryDefinitions": [],
+    "ignoreWords": [],
+    "flagWords": [
+        "appupgrade" // Should be appUpgrade, AppUpgrade, or app-upgrade
+    ]
+}
