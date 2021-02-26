@@ -12,6 +12,17 @@ alias app-upgrade-alpha='cd $APP_UPGRADE_HOME/app \
   && export GOOGLE_APPLICATION_CREDENTIALS=$APP_UPGRADE_CREDENTIALS_FOLDER/app-upgrade-alpha-firebase-adminsdk.json \
   && echo $GOOGLE_APPLICATION_CREDENTIALS'
 
+alias app-upgrade-gamma='cd $APP_UPGRADE_HOME/app \
+  && firebase use app-upgrade-gamma \
+  && ([ -f $APP_UPGRADE_HOME/app/app-upgrade-client/.env.local ] \
+      && { echo "Old .env.local"; cat $APP_UPGRADE_HOME/app/app-upgrade-client/.env.local; } \
+      || echo ".env.local does not exist") \
+  && cp $APP_UPGRADE_HOME/app/app-upgrade-client/.env.gamma $APP_UPGRADE_HOME/app/app-upgrade-client/.env.local \
+  && echo "\nREACT_APP_USE_EMULATOR=true" >> $APP_UPGRADE_HOME/app/app-upgrade-client/.env.local \
+  && cd - \
+  && export GOOGLE_APPLICATION_CREDENTIALS=$APP_UPGRADE_CREDENTIALS_FOLDER/app-upgrade-gamma-firebase-adminsdk.json \
+  && echo $GOOGLE_APPLICATION_CREDENTIALS'
+
 alias app-upgrade:dev:firebase='cd $APP_UPGRADE_HOME/app \
   && ([ -f $APP_UPGRADE_HOME/app/emulator.data ] \
       && firebase emulators:start --only firestore,functions,pubsub,auth --import=./emulator.data \

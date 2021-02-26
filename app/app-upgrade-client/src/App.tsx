@@ -4,6 +4,7 @@ import { Provider } from 'react-redux';
 import { BrowserRouter as Router, Route, Switch } from 'react-router-dom';
 import './App.css';
 import { FirebaseAuthService } from './auth/auth.service';
+import { Nav } from './components/nav/nav';
 import { Dashboard } from './dashboard';
 import { Environment } from './env';
 import { FirebaseApiClient } from './firebase-api-client';
@@ -30,6 +31,7 @@ export function App() {
       <Provider store={store}>
         <ThemeProvider theme={theme}>
           <Router>
+            <Nav />
             <Switch>
               <Route path="/signup">
                 <div className="App">

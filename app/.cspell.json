@@ -27,7 +27,8 @@
         "**/*.data",
         "**/*.data/**",
         "**/prism.css",
-        "**/build/**"
+        "**/build/**",
+        "**/*.svg"
     ],
     "dictionaryDefinitions": [],
     "ignoreWords": [],
