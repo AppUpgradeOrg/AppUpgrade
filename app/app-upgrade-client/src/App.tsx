@@ -3,8 +3,10 @@ import React from 'react';
 import { Provider } from 'react-redux';
 import { BrowserRouter as Router, Route, Switch } from 'react-router-dom';
 import './App.css';
+import { FirebaseAuthService } from './auth/auth.service';
 import { Dashboard } from './dashboard';
 import { Environment } from './env';
+import { FirebaseApiClient } from './firebase-api-client';
 import { firebaseConf } from './firebase/firebase.conf';
 import { configureFirebaseApp } from './firebase/firebase.service';
 import { Loading } from './Loading';
@@ -14,9 +16,13 @@ import { Signup } from './Signup';
 import { configureAppStore } from './store';
 import { theme } from './theme';
 
+// Bootstrap services
 const environment = new Environment();
 const firebaseApp = configureFirebaseApp(firebaseConf(environment));
-const store = configureAppStore(firebaseApp);
+const firebaseApiClient = new FirebaseApiClient(firebaseApp);
+const firebaseAuthService = new FirebaseAuthService(firebaseApp);
+
+const store = configureAppStore(firebaseApiClient, firebaseAuthService);
 
 export function App() {
   return (

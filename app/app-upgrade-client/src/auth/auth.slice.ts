@@ -1,6 +1,6 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 import { AppThunk } from '../store';
-import { RequestState } from '../types';
+import { AppUser, RequestState } from '../types';
 
 export interface AuthState {
   isAuthenticated: boolean;
@@ -10,10 +10,6 @@ export interface AuthState {
   signInError: string | undefined;
   signUpUserErr: string | undefined;
   signUpPasswordErr: string | undefined;
-}
-
-export interface AppUser {
-  email: string;
 }
 
 const initialState: AuthState = {
@@ -105,40 +101,37 @@ export const resetSignInErrors = (): AppThunk => async (dispatch) => {
 export const initializeUser = (): AppThunk => async (
   dispatch,
   getState,
-  { firebaseApp }
+  { authService }
 ) => {
-  const { currentUser } = firebaseApp.auth();
+  const currentUser = authService.getCurrentUser();
   if (currentUser) {
     dispatch(setUser({ user: { email: currentUser.email! } }));
   }
 
-  firebaseApp.auth().onAuthStateChanged(async (result) => {
-    if (result) {
-      dispatch(setUser({ user: { email: result.email! } }));
-    } else {
-      dispatch(setUser({ user: null }));
-    }
+  authService.onAuthStateChanged(async (result) => {
+    dispatch(setUser({ user: result }));
   });
 };
 
 export const newUser = (email: string, password: string): AppThunk => async (
   dispatch,
   getState,
-  { firebaseApp }
+  { authService }
 ) => {
   try {
     dispatch(resetSignUpErrors());
     dispatch(
       setNewUserRequestState({ newUserRequestState: RequestState.FETCHING })
     );
-    const credential = await firebaseApp
-      .auth()
-      .createUserWithEmailAndPassword(email, password);
-    if (credential.user) {
+    const user = await authService.createUserWithEmailAndPassword(
+      email,
+      password
+    );
+    if (user) {
       dispatch(
         setNewUserRequestState({ newUserRequestState: RequestState.SUCCESS })
       );
-      dispatch(setUser({ user: { email: credential.user.email! } }));
+      dispatch(setUser({ user }));
     } else {
       dispatch(
         setNewUserRequestState({ newUserRequestState: RequestState.FAILURE })
@@ -179,21 +172,19 @@ export const newUser = (email: string, password: string): AppThunk => async (
 export const signInUser = (email: string, password: string): AppThunk => async (
   dispatch,
   getState,
-  { firebaseApp }
+  { authService }
 ) => {
   try {
     dispatch(
       setSignInRequestState({ signInRequestState: RequestState.FETCHING })
     );
-    const credential = await firebaseApp
-      .auth()
-      .signInWithEmailAndPassword(email, password);
+    const user = await authService.signInWithEmailAndPassword(email, password);
 
-    if (credential.user) {
+    if (user) {
       dispatch(
         setSignInRequestState({ signInRequestState: RequestState.SUCCESS })
       );
-      dispatch(setUser({ user: { email: credential.user.email! } }));
+      dispatch(setUser({ user }));
     } else {
       dispatch(
         setSignInRequestState({ signInRequestState: RequestState.FAILURE })
@@ -211,9 +202,9 @@ export const signInUser = (email: string, password: string): AppThunk => async (
 export const signOutUser = (): AppThunk => async (
   dispatch,
   getState,
-  { firebaseApp }
+  { authService }
 ) => {
-  await firebaseApp.auth().signOut();
+  await authService.signOut();
   dispatch(setUser({ user: null }));
 };
 

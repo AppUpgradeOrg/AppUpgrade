@@ -2,6 +2,7 @@ import React, { FC, useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { Redirect } from 'react-router-dom';
 import { initializeUser } from './auth/auth.slice';
+import { LoadingSpinner } from './LoadingSpinner';
 import { RootState } from './root-reducer';
 
 export const ProtectedRoute: FC<{ path: string }> = ({ children }: any) => {
@@ -15,7 +16,7 @@ export const ProtectedRoute: FC<{ path: string }> = ({ children }: any) => {
   }, [dispatch]);
 
   if (user === undefined) {
-    return <>Loading</>;
+    return <LoadingSpinner />;
   }
 
   if (user === null) {

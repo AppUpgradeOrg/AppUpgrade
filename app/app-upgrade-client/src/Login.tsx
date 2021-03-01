@@ -102,6 +102,7 @@ export const Login: FC = () => {
                 label="Email"
                 name="email"
                 type="email"
+                id="email"
                 disabled={signInRequestState === RequestState.FETCHING}
                 onChange={handleChange}
               />
@@ -114,6 +115,7 @@ export const Login: FC = () => {
                 label="Password"
                 name="password"
                 type="password"
+                id="password"
                 disabled={signInRequestState === RequestState.FETCHING}
                 onChange={handleChange}
               />
