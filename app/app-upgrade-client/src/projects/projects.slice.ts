@@ -34,23 +34,21 @@ export const { setFetchProjectsRequestState } = projectsSlice.actions;
 export const fetchProjects = (): AppThunk => async (
   dispatch,
   getState,
-  { firebaseApp }
+  { apiClient }
 ) => {
   dispatch(
     setFetchProjectsRequestState({ requestState: RequestState.FETCHING })
   );
 
   try {
-    const res = await firebaseApp.functions().httpsCallable('getProjects')();
+    const projects = await apiClient.getProjects();
 
-    dispatch(
-      projectsSlice.actions.setProjects({ projects: res.data as Project[] })
-    );
+    dispatch(projectsSlice.actions.setProjects({ projects }));
     dispatch(
       setFetchProjectsRequestState({ requestState: RequestState.SUCCESS })
     );
   } catch (e) {
-    console.log('Error fetching projects', e);
+    console.error('Error fetching projects', e);
     dispatch(
       setFetchProjectsRequestState({ requestState: RequestState.FAILURE })
     );

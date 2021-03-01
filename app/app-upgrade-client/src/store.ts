@@ -2,31 +2,37 @@ import { Action, configureStore } from '@reduxjs/toolkit';
 import { ThunkAction, ThunkDispatch } from 'redux-thunk';
 // eslint-disable-next-line import/no-cycle
 import { rootReducer, RootState } from './root-reducer';
-import { FirebaseApp } from './types';
+import { IApiClient, IAuthService } from './types';
 
-export const configureAppStore = (firebaseApp: FirebaseApp) => {
+export const configureAppStore = (
+  apiClient: IApiClient,
+  authService: IAuthService
+) => {
   return configureStore({
     reducer: rootReducer,
     middleware: (getDefaultMiddleware) =>
       getDefaultMiddleware({
         thunk: {
           extraArgument: {
-            firebaseApp
+            apiClient,
+            authService
           }
         }
       })
   });
 };
 
+export type AppStore = ReturnType<typeof configureAppStore>;
+
 export type AppDispatch = ThunkDispatch<
   RootState,
-  { firebaseApp: FirebaseApp },
+  { apiClient: IApiClient; authService: IAuthService },
   Action
 >;
 
 export type AppThunk = ThunkAction<
   void,
   RootState,
-  { firebaseApp: FirebaseApp },
+  { apiClient: IApiClient; authService: IAuthService },
   Action<string>
 >;

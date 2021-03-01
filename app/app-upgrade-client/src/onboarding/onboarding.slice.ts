@@ -31,7 +31,7 @@ export const onboardNewUser = (
   projectName: string,
   environmentName: string,
   domainName: string
-): AppThunk => async (dispatch, getState, { firebaseApp }) => {
+): AppThunk => async (dispatch, getState, { apiClient }) => {
   dispatch(
     setOnboardNewUserRequestState({ requestState: RequestState.FETCHING })
   );
@@ -45,9 +45,7 @@ export const onboardNewUser = (
       domainName
     };
 
-    await firebaseApp.functions().httpsCallable('onboardNewUser')(
-      onboardNewUserDto
-    );
+    await apiClient.onboardNewUser(onboardNewUserDto);
     dispatch(
       setOnboardNewUserRequestState({ requestState: RequestState.SUCCESS })
     );

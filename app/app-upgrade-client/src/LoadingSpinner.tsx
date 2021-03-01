@@ -21,6 +21,8 @@ const styles: { [s: string]: CSSProperties } = {
   }
 };
 
+export const TEST_ID = 'loading-spinner-text';
+
 export const LoadingSpinner: FC<LoadingSpinnerProps> = (props) => {
   const effectiveProps = {
     ...defaultProps,
@@ -33,7 +35,9 @@ export const LoadingSpinner: FC<LoadingSpinnerProps> = (props) => {
         <CircularProgress />
       </div>
       {!effectiveProps.hideText && (
-        <div style={{ marginTop: 10 }}>{effectiveProps.withText}</div>
+        <div data-testid={TEST_ID} style={{ marginTop: 10 }}>
+          {effectiveProps.withText}
+        </div>
       )}
     </div>
   );
