@@ -1,6 +1,6 @@
 # This is a basic workflow to help you get started with Actions
 
-name: CI
+name: Environment Sync
 
 # Controls when the action will run.
 on:
@@ -46,6 +46,11 @@ jobs:
           yarn global add firebase-tools
           cd $APP_UPGRADE_HOME
           app-upgrade-install
+
+      - name: Build
+        run: |
+          export APP_UPGRADE_HOME=$(pwd)
+          cd $APP_UPGRADE_HOME
           app-upgrade-build
 
       - name: Prepare Deploy
