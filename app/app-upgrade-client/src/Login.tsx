@@ -10,13 +10,14 @@ import {
 import { makeStyles } from '@material-ui/core/styles';
 import React, { FC, useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { Redirect } from 'react-router-dom';
+import { Link, Redirect } from 'react-router-dom';
 import {
   resetSignInErrors,
   resetSignInTransientValues,
   signInUser
 } from './auth/auth.slice';
 import { RootState } from './root-reducer';
+import { ROUTES } from './routes';
 import { RequestState } from './types';
 
 const useStyles = makeStyles(() => ({
@@ -83,7 +84,7 @@ export const Login: FC = () => {
   }, [dispatch]);
 
   if (user) {
-    return <Redirect to="/dashboard" />;
+    return <Redirect to={ROUTES.DASHBOARD} />;
   }
 
   return (
@@ -134,8 +135,8 @@ export const Login: FC = () => {
               >
                 Login
               </Button>
-              <Button href="/signup" color="primary">
-                New user? Create an account.
+              <Button color="primary" component={Link} to={ROUTES.SIGN_UP}>
+                New user? Create an account?
               </Button>
             </Grid>
           </Grid>

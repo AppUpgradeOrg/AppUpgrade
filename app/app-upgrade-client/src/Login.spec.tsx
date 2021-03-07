@@ -59,15 +59,30 @@ test('<Login /> redirects to Dashboard page on successful login', async () => {
 });
 
 test('<Login /> displays error when login unsuccessful', async () => {
-  render(<Login />, {
-    wrapper: configureTestWrapper({
-      authOverrides: {
-        signInWithEmailAndPassword: async (email, password) => {
-          throw new Error('Failed to authenticated');
+  const history = createMemoryHistory();
+  history.push('/login');
+
+  render(
+    <Router history={history}>
+      <Switch>
+        <Route path="/login">
+          <Login />
+        </Route>
+        <Route path="/dashboard">
+          <div>Dashboard Page</div>
+        </Route>
+      </Switch>
+    </Router>,
+    {
+      wrapper: configureTestWrapper({
+        authOverrides: {
+          signInWithEmailAndPassword: async (email, password) => {
+            throw new Error('Failed to authenticated');
+          }
         }
-      }
-    })
-  });
+      })
+    }
+  );
 
   const emailInput = getEmailInput();
   const passwordInput = getPasswordInput();
@@ -98,9 +113,21 @@ test('<Login /> disables login button when signing in', async () => {
 
   const { store } = Wrapper;
 
-  render(<Login />, {
-    wrapper: Wrapper
-  });
+  render(
+    <Router history={history}>
+      <Switch>
+        <Route path="/login">
+          <Login />
+        </Route>
+        <Route path="/dashboard">
+          <div>Dashboard Page</div>
+        </Route>
+      </Switch>
+    </Router>,
+    {
+      wrapper: Wrapper
+    }
+  );
 
   const loginButton = getLoginButton();
 

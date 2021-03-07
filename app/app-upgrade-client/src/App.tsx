@@ -1,19 +1,16 @@
 import { ThemeProvider } from '@material-ui/core';
-import React from 'react';
+import React, { FC, useEffect, useState } from 'react';
 import { Provider } from 'react-redux';
 import { BrowserRouter as Router, Route, Switch } from 'react-router-dom';
 import './App.css';
 import { FirebaseAuthService } from './auth/auth.service';
-import { Nav } from './components/nav/nav';
-import { Dashboard } from './dashboard';
 import { Environment } from './env';
-import { FirebaseApiClient } from './firebase-api-client';
+import { FirebaseApiClient } from './firebase/firebase-api-client';
 import { firebaseConf } from './firebase/firebase.conf';
 import { configureFirebaseApp } from './firebase/firebase.service';
-import { Loading } from './Loading';
-import { Login } from './Login';
+import { NavigationBar } from './NavigationBar';
 import { ProtectedRoute } from './protected-route';
-import { Signup } from './Signup';
+import { AppRoute, appRoutes } from './routes';
 import { configureAppStore } from './store';
 import { theme } from './theme';
 
@@ -26,30 +23,44 @@ const firebaseAuthService = new FirebaseAuthService(firebaseApp);
 const store = configureAppStore(firebaseApiClient, firebaseAuthService);
 
 export function App() {
+  const [appRoute, setAppRoute] = useState<AppRoute | undefined>(undefined);
+
   return (
     <React.Fragment>
       <Provider store={store}>
         <ThemeProvider theme={theme}>
           <Router>
-            <Nav />
+            <NavigationBar appRoute={appRoute} />
             <Switch>
-              <Route path="/signup">
-                <div className="App">
-                  <Signup />
-                </div>
-              </Route>
-              <Route path="/login">
-                <div className="App">
-                  <Login />
-                </div>
-              </Route>
-              <ProtectedRoute path="/dashboard">
-                <Dashboard />
-              </ProtectedRoute>
-              <Route path="/">
-                {/* Home */}
-                <Loading />
-              </Route>
+              {appRoutes.map((appRoute) => {
+                if (appRoute.protected) {
+                  return (
+                    <ProtectedRoute
+                      exact={appRoute.exact}
+                      key={appRoute.name}
+                      path={appRoute.path}
+                    >
+                      <AppRouteWrapper
+                        appRoute={appRoute}
+                        onRouted={(route) => setAppRoute(route)}
+                      />
+                    </ProtectedRoute>
+                  );
+                } else {
+                  return (
+                    <Route
+                      exact={appRoute.exact}
+                      key={appRoute.name}
+                      path={appRoute.path}
+                    >
+                      <AppRouteWrapper
+                        appRoute={appRoute}
+                        onRouted={(route) => setAppRoute(route)}
+                      />
+                    </Route>
+                  );
+                }
+              })}
             </Switch>
           </Router>
         </ThemeProvider>
@@ -57,3 +68,13 @@ export function App() {
     </React.Fragment>
   );
 }
+
+export const AppRouteWrapper: FC<{
+  appRoute: AppRoute;
+  onRouted: (appRoute: AppRoute) => void;
+}> = ({ appRoute, onRouted }) => {
+  useEffect(() => {
+    onRouted(appRoute);
+  }, [appRoute, onRouted]);
+  return <>{appRoute.component()}</>;
+};
