@@ -9,6 +9,7 @@ import { onboardNewUser } from './onboarding/onboarding.slice';
 import './prism.css';
 import { fetchProjects } from './projects/projects.slice';
 import { RootState } from './root-reducer';
+import { ROUTES } from './routes';
 
 const useStyles = makeStyles((theme) => ({
   paper: {
@@ -170,7 +171,7 @@ export const OnboardingForm: FC = () => {
   }, [stepIndex, setStepIndex]);
 
   if (!bootstrapping && projects.length > 0) {
-    return <Redirect to="/dashboard" />;
+    return <Redirect to={ROUTES.DASHBOARD} />;
   }
 
   const body = (

@@ -1,5 +1,5 @@
 import { OnboardNewUserDto, Project } from '@app-upgrade/common';
-import { FirebaseApp, IApiClient } from './types';
+import { FirebaseApp, IApiClient } from '../types';
 
 export class FirebaseApiClient implements IApiClient {
   constructor(private readonly firebaseApp: FirebaseApp) {}

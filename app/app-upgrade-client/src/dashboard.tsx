@@ -3,12 +3,12 @@ import { makeStyles } from '@material-ui/core/styles';
 import React, { FC, useState } from 'react';
 import { useSelector } from 'react-redux';
 import { Redirect, useLocation } from 'react-router';
-import { OnboardingForm } from './onboarding-form';
+import { OnboardingForm } from './OnboardingForm';
 import { RootState } from './root-reducer';
+import { ROUTES } from './routes';
 
 const useStyles = makeStyles(() => ({
   root: {
-    minHeight: '100vh',
     display: 'flex',
     flexDirection: 'column'
   }
@@ -28,13 +28,13 @@ export const Dashboard: FC = () => {
   );
 
   if (!isOnboarding && Boolean(params.get('onboarding'))) {
-    return <Redirect to="/dashboard" />;
+    return <Redirect to={ROUTES.DASHBOARD} />;
   }
 
   return (
-    <React.Fragment>
+    <>
       <Container className={classes.root}>
-        <Box marginTop="120px">
+        <Box marginTop="40px">
           <Typography variant="h4">Dashboard</Typography>
         </Box>
       </Container>
@@ -48,6 +48,6 @@ export const Dashboard: FC = () => {
           <OnboardingForm />
         </div>
       </Modal>
-    </React.Fragment>
+    </>
   );
 };

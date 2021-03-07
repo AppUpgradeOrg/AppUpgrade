@@ -28,7 +28,10 @@ export const configureTestWrapper = ({
   authOverrides?: Partial<
     Pick<
       IAuthService,
-      'onAuthStateChanged' | 'getCurrentUser' | 'signInWithEmailAndPassword'
+      | 'onAuthStateChanged'
+      | 'getCurrentUser'
+      | 'signInWithEmailAndPassword'
+      | 'signOut'
     >
   >;
 } = {}) => {
@@ -53,6 +56,9 @@ export const configureTestWrapper = ({
         }
 
         return cb(null);
+      },
+      signOut: () => {
+        return Promise.resolve();
       },
       ...(authOverrides || {})
     } as IAuthService;

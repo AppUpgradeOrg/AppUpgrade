@@ -5,6 +5,7 @@ import { Redirect } from 'react-router-dom';
 import { initializeUser } from './auth/auth.slice';
 import { LoadingSpinner } from './LoadingSpinner';
 import { RootState } from './root-reducer';
+import { ROUTES } from './routes';
 export const Loading: FC = () => {
   const dispatch = useDispatch();
   const user = useSelector((state: RootState) => {
@@ -29,8 +30,8 @@ export const Loading: FC = () => {
           </Grid>
         </Grid>
       )}
-      {user === null && <Redirect to="/login" />}
-      {user && <Redirect to="/dashboard" />}
+      {user === null && <Redirect to={ROUTES.LOGIN} />}
+      {user && <Redirect to={ROUTES.DASHBOARD} />}
     </>
   );
 };
