@@ -15,7 +15,9 @@
         "signup",
         "testid",
         "uuidv",
-        "webfonts"
+        "webfonts",
+        "appspot",
+        "eval"
     ],
     "maxNumberOfProblems": 1000,
     "ignorePaths": [
@@ -31,8 +33,5 @@
         "**/*.svg"
     ],
     "dictionaryDefinitions": [],
-    "ignoreWords": [],
-    "flagWords": [
-        "appupgrade" // Should be appUpgrade, AppUpgrade, or app-upgrade
-    ]
+    "ignoreWords": []
 }

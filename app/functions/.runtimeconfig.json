@@ -1,0 +1,6 @@
+{
+  "core": {
+    "environment-name": "local",
+    "web-sdk-url": "http://localhost:8000/bundle.js"
+  }
+}

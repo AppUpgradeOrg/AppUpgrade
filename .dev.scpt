@@ -8,16 +8,22 @@ tell application "iTerm2"
     set verticalPane to (split vertically with default profile)
     tell verticalPane
       write text "app-upgrade:dev:common"
-      set quadrantPane to (split horizontally with default profile)
-      tell quadrantPane
+      set horizontalPane to (split horizontally with default profile)
+      tell horizontalPane
         write text "app-upgrade:dev:functions"
       end tell
     end tell
   end tell
   tell current session of current window
-    set lastQuadrant to (split horizontally with default profile)
-    tell lastQuadrant
+    set nextHorizontalPane to (split horizontally with default profile)
+    tell nextHorizontalPane
       write text "app-upgrade:dev:app"
+    end tell
+  end tell
+  tell current session of current window
+    set finalHorizontalPane to (split horizontally with default profile)
+    tell finalHorizontalPane
+      write text "app-upgrade:dev:web-sdk"
     end tell
   end tell
 end tell

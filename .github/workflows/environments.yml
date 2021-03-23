@@ -30,7 +30,7 @@ jobs:
       - name: Extract Firebase Environment
         shell: bash
         run: |
-          echo "The selected color is ${{ steps.extract_branch.outputs.branch }}"
+          echo "The selected branch is ${{ steps.extract_branch.outputs.branch }}"
           echo "##[set-output name=fb_env;]$(echo "app-upgrade-${GITHUB_REF#refs/heads/}")"
         id: update_fb_env
 
@@ -61,6 +61,19 @@ jobs:
           rm firebase.json.bu
           yarn deploy ${{ steps.extract_branch.outputs.branch }}
 
+      - name: Configure functions environment
+        env:
+          FIREBASE_TOKEN: ${{ secrets.FIREBASE_TOKEN }}
+          PROJECT_ID: ${{ steps.update_fb_env.outputs.fb_env }}
+          NODE_ENV: ${{ steps.extract_branch.outputs.branch }}
+        run: |
+          export APP_UPGRADE_HOME=$(pwd)
+          cd $APP_UPGRADE_HOME/app
+          cd build-scripts
+          FIREBASE_CONF_VALUES=$(node update-functions-config.js)
+          firebase use --add "$PROJECT_ID"
+          eval firebase functions:config:set $FIREBASE_CONF_VALUES
+
       - uses: w9jds/firebase-action@master
         with:
           args: deploy --debug
@@ -68,3 +81,13 @@ jobs:
           FIREBASE_TOKEN: ${{ secrets.FIREBASE_TOKEN }}
           PROJECT_PATH: app
           PROJECT_ID: ${{ steps.update_fb_env.outputs.fb_env }}
+
+      - name: Update web sdk
+        env:
+          GCP_KEY: ${{ secrets.GCP_SA_KEY }}
+        run: |
+          echo "$GCP_KEY" > /opt/gcp_key.json
+          export GOOGLE_APPLICATION_CREDENTIALS=/opt/gcp_key.json
+          export APP_UPGRADE_HOME=$(pwd)
+          cd $APP_UPGRADE_HOME/app/build-scripts
+          node storage ${{ steps.extract_branch.outputs.branch }}

@@ -7,6 +7,9 @@ import { onboardNewUser as onboardNewUserFn } from './onboard-new-user';
 
 admin.initializeApp();
 
+console.log('environment name', functions.config().core['environment-name']);
+console.log('web-sdk-url', functions.config().core['web-sdk-url']);
+
 export const createAuthAccountRecord = functions.auth
   .user()
   .onCreate(async (user) => {

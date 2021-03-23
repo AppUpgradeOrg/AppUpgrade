@@ -36,3 +36,6 @@ alias app-upgrade:dev:functions='cd $APP_UPGRADE_HOME/app \
 
 alias app-upgrade:dev:app='cd $APP_UPGRADE_HOME/app/app-upgrade-client \
   && yarn start'
+
+alias app-upgrade:dev:web-sdk='cd $APP_UPGRADE_HOME/app/web-sdk \
+  && yarn build:dev && yarn serve'
