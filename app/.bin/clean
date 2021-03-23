@@ -32,5 +32,10 @@ rm -rf node_modules
 rm -rf dist
 rm -f tsconfig.tsbuildinfo
 
+cd ../web-sdk
+rm -rf node_modules
+rm -rf dist
+rm -f tsconfig.tsbuildinfo
+
 cd ../build-scripts
 rm -rf node_modules

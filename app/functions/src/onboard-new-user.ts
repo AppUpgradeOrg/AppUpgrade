@@ -13,12 +13,6 @@ export const onboardNewUser = async (
   const organizationId = uuidv4();
   const projectId = uuidv4();
   const environmentId = uuidv4();
-  const myBucket = admin.storage().bucket();
-  const file = myBucket.file(
-    `cdn/organizations/${organizationId}/projects/${projectId}/environments/${environmentId}/script.js`
-  );
-
-  const contents = `console.log(${projectId})`;
 
   if (!!authUid) {
     try {
@@ -49,12 +43,10 @@ export const onboardNewUser = async (
             environmentName: onboardNewUserDto.environmentName,
             domains: [onboardNewUserDto.domainName],
             createdOn: admin.firestore.Timestamp.now()
-          }),
-
-        file.save(contents, { public: true })
+          })
       ]);
-      console.log('Data added successfully');
-      return file.publicUrl();
+
+      return environmentId;
     } catch (error) {
       throw new functions.https.HttpsError('unknown', error);
     }

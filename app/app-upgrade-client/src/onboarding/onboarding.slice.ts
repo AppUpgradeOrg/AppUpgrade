@@ -5,10 +5,12 @@ import { RequestState } from '../types';
 
 export interface OnboardingState {
   onboardNewUserRequestState: RequestState;
+  firstEnvironmentId?: string;
 }
 
 const initialState: OnboardingState = {
-  onboardNewUserRequestState: RequestState.INITIAL
+  onboardNewUserRequestState: RequestState.INITIAL,
+  firstEnvironmentId: undefined
 };
 
 const onboarding = createSlice({
@@ -17,9 +19,13 @@ const onboarding = createSlice({
   reducers: {
     setOnboardNewUserRequestState(
       state,
-      action: PayloadAction<{ requestState: RequestState }>
+      action: PayloadAction<{
+        requestState: RequestState;
+        firstEnvironmentId?: string;
+      }>
     ) {
       state.onboardNewUserRequestState = action.payload.requestState;
+      state.firstEnvironmentId = action.payload.firstEnvironmentId;
     }
   }
 });
@@ -45,9 +51,14 @@ export const onboardNewUser = (
       domainName
     };
 
-    await apiClient.onboardNewUser(onboardNewUserDto);
+    const firstEnvironmentId = await apiClient.onboardNewUser(
+      onboardNewUserDto
+    );
     dispatch(
-      setOnboardNewUserRequestState({ requestState: RequestState.SUCCESS })
+      setOnboardNewUserRequestState({
+        requestState: RequestState.SUCCESS,
+        firstEnvironmentId
+      })
     );
   } catch (e) {
     dispatch(
