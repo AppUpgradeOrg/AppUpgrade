@@ -1,4 +1,4 @@
-import { OnboardNewUserDto, Project } from '@app-upgrade/common';
+import { Conf, OnboardNewUserDto, Project } from '@app-upgrade/common';
 import firebase from 'firebase';
 
 export enum RequestState {
@@ -28,8 +28,9 @@ export interface IEnvironment {
 }
 
 export interface IApiClient {
-  onboardNewUser(onboardNewUserDto: OnboardNewUserDto): Promise<void>;
+  onboardNewUser(onboardNewUserDto: OnboardNewUserDto): Promise<string>;
   getProjects(): Promise<Project[]>;
+  fetchConf(): Promise<Conf>;
 }
 
 export interface IAuthService {

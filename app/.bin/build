@@ -13,3 +13,6 @@ yarn build
 
 cd ../scripts
 yarn build
+
+cd ../web-sdk
+yarn build:production

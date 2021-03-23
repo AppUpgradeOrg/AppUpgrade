@@ -2,12 +2,15 @@ import { combineReducers } from '@reduxjs/toolkit';
 // eslint-disable-next-line import/no-cycle
 import { authReducer } from './auth/auth.slice';
 // eslint-disable-next-line import/no-cycle
+import { confReducer } from './conf/conf.slice';
+// eslint-disable-next-line import/no-cycle
 import { onboardingReducer } from './onboarding/onboarding.slice';
 // eslint-disable-next-line import/no-cycle
 import { projectsReducer } from './projects/projects.slice';
 
 export const rootReducer = combineReducers({
   auth: authReducer,
+  conf: confReducer,
   onboarding: onboardingReducer,
   projects: projectsReducer
 });

@@ -5,3 +5,10 @@ export type OnboardNewUserDto = {
   environmentName: string;
   domainName: string;
 };
+
+export type Conf = {
+  core: {
+    environmentName: string;
+    webSdkUrl: string;
+  };
+};

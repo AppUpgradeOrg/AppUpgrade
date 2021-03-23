@@ -5,6 +5,7 @@ import Prism from 'prismjs'; // eslint-disable-line
 import React, { FC, useCallback, useEffect, useMemo, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { Redirect } from 'react-router';
+import { confSelectors } from './conf/conf.slice';
 import { onboardNewUser } from './onboarding/onboarding.slice';
 import './prism.css';
 import { fetchProjects } from './projects/projects.slice';
@@ -36,15 +37,22 @@ export const OnboardingForm: FC = () => {
   const [bootstrapping, setBootstrapping] = useState(false);
   const classes = useStyles();
 
-  const { projects } = useSelector((rootState: RootState) => {
-    return {
-      projects: rootState.projects.projects
-    };
-  });
+  const { projects, bootstrappedFirstEnvironmentId } = useSelector(
+    (rootState: RootState) => {
+      return {
+        projects: rootState.projects.projects,
+        bootstrappedFirstEnvironmentId: rootState.onboarding.firstEnvironmentId
+      };
+    }
+  );
+
+  const conf = useSelector(confSelectors.expectConf);
 
   useEffect(() => {
-    Prism.highlightAll();
-  }, [bootstrapping]);
+    if (bootstrappedFirstEnvironmentId) {
+      Prism.highlightAll();
+    }
+  }, [bootstrappedFirstEnvironmentId]);
 
   useEffect(() => {
     dispatch(fetchProjects());
@@ -225,7 +233,7 @@ export const OnboardingForm: FC = () => {
           </>
         )}
 
-        {bootstrapping && (
+        {bootstrappedFirstEnvironmentId && (
           <>
             <Box>
               <Typography variant="h6">
@@ -245,17 +253,14 @@ export const OnboardingForm: FC = () => {
                   }
                 </Typography>
               </Box>
-              {/* <pre>
-                <code className="language-html">
-                  {`<script type="text/javascript" src="https://cdnjs.appupgrade.io/organization/123_456_789.js" />`}
-                </code>
-              </pre> */}
               <pre>
                 <code className="language-markup">
                   {`
 <body>
   <!-- Add the snippet below near the bottom of your <body> tag -->
-  <script async src="https://cdnjs.appupgrade.io/organization/123_456_789.js" />
+  <script>
+    window.appUpgrade=window.appUpgrade||{},appUpgrade.init=function(p,e){window.appUpgrade.appUpgradeId=p,(e=document.createElement("script")).type="text/javascript",e.async=!0,e.src="${conf.core.webSdkUrl}",(p=document.getElementsByTagName("script")[0]).parentNode.insertBefore(e,p)},appUpgrade.init("${bootstrappedFirstEnvironmentId}");
+  </script>
 </body>`}
                 </code>
               </pre>
