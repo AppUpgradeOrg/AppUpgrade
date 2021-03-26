@@ -91,11 +91,11 @@ export const Signup: FC = () => {
     if (newUserRequestState !== RequestState.INITIAL) {
       return (
         <Redirect
-          to={{ pathname: ROUTES.DASHBOARD, search: '?onboarding=true' }}
+          to={{ pathname: ROUTES.PROJECTS, search: '?onboarding=true' }}
         />
       );
     } else {
-      return <Redirect to={ROUTES.DASHBOARD} />;
+      return <Redirect to={ROUTES.PROJECTS} />;
     }
   }
 

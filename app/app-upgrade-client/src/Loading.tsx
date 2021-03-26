@@ -31,7 +31,7 @@ export const Loading: FC = () => {
         </Grid>
       )}
       {user === null && <Redirect to={ROUTES.LOGIN} />}
-      {user && <Redirect to={ROUTES.DASHBOARD} />}
+      {user && <Redirect to={ROUTES.PROJECTS} />}
     </>
   );
 };

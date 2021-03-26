@@ -1,4 +1,10 @@
-import { Conf, OnboardNewUserDto, Project } from '@app-upgrade/common';
+import {
+  AddNewEnvironmentDto,
+  AddNewProjectDto,
+  Conf,
+  OnboardNewUserDto,
+  Project
+} from '@app-upgrade/common';
 import { FirebaseApp, IApiClient } from '../types';
 
 export class FirebaseApiClient implements IApiClient {
@@ -18,6 +24,24 @@ export class FirebaseApiClient implements IApiClient {
       .httpsCallable('getProjects')();
 
     return res.data as Project[];
+  }
+
+  async addNewProject(addNewProjectDto: AddNewProjectDto): Promise<Project> {
+    const res = await this.firebaseApp
+      .functions()
+      .httpsCallable('addNewProject')(addNewProjectDto);
+
+    return res.data as Project;
+  }
+
+  async addNewEnvironmentToProject(
+    addNewEnvironmentDto: AddNewEnvironmentDto
+  ): Promise<string> {
+    const res = await this.firebaseApp
+      .functions()
+      .httpsCallable('addNewEnvironment')(addNewEnvironmentDto);
+
+    return res.data as string;
   }
 
   async fetchConf(): Promise<Conf> {

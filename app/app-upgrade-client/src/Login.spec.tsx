@@ -4,6 +4,7 @@ import React from 'react';
 import { Route, Router, Switch } from 'react-router-dom';
 import { setSignInRequestState } from './auth/auth.slice';
 import { Login } from './Login';
+import { ROUTES } from './routes';
 import { configureTestWrapper } from './test-utils';
 import { RequestState } from './types';
 
@@ -24,18 +25,18 @@ const getLoginButton = () =>
 
 /// Tests
 
-test('<Login /> redirects to Dashboard page on successful login', async () => {
+test('<Login /> redirects to Environments Page on successful login', async () => {
   const history = createMemoryHistory();
-  history.push('/login');
+  history.push(ROUTES.LOGIN);
 
   render(
     <Router history={history}>
       <Switch>
-        <Route path="/login">
+        <Route path={ROUTES.LOGIN}>
           <Login />
         </Route>
-        <Route path="/dashboard">
-          <div>Dashboard Page</div>
+        <Route path={ROUTES.PROJECTS}>
+          <div>Projects Page</div>
         </Route>
       </Switch>
     </Router>,
@@ -54,22 +55,22 @@ test('<Login /> redirects to Dashboard page on successful login', async () => {
   fireEvent.change(passwordInput, { target: { value: 'password' } });
 
   fireEvent.click(loginButton);
-  await waitFor(() => screen.getByText('Dashboard Page'));
-  expect(history.location.pathname).toBe('/dashboard');
+  await waitFor(() => screen.getByText('Projects Page'));
+  expect(history.location.pathname).toBe(ROUTES.PROJECTS);
 });
 
 test('<Login /> displays error when login unsuccessful', async () => {
   const history = createMemoryHistory();
-  history.push('/login');
+  history.push(ROUTES.LOGIN);
 
   render(
     <Router history={history}>
       <Switch>
-        <Route path="/login">
+        <Route path={ROUTES.LOGIN}>
           <Login />
         </Route>
-        <Route path="/dashboard">
-          <div>Dashboard Page</div>
+        <Route path={ROUTES.PROJECTS}>
+          <div>Projects Page</div>
         </Route>
       </Switch>
     </Router>,
@@ -101,7 +102,7 @@ test('<Login /> displays error when login unsuccessful', async () => {
 
 test('<Login /> disables login button when signing in', async () => {
   const history = createMemoryHistory();
-  history.push('/login');
+  history.push(ROUTES.LOGIN);
 
   const Wrapper = configureTestWrapper({
     authOverrides: {
@@ -116,11 +117,11 @@ test('<Login /> disables login button when signing in', async () => {
   render(
     <Router history={history}>
       <Switch>
-        <Route path="/login">
+        <Route path={ROUTES.LOGIN}>
           <Login />
         </Route>
-        <Route path="/dashboard">
-          <div>Dashboard Page</div>
+        <Route path={ROUTES.PROJECTS}>
+          <div>Projects Page</div>
         </Route>
       </Switch>
     </Router>,

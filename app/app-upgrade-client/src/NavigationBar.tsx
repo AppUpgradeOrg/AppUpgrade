@@ -65,7 +65,7 @@ export const NavigationBar: FC<{ appRoute?: AppRoute }> = ({ appRoute }) => {
               }}
             >
               <Link
-                to={ROUTES.DASHBOARD}
+                to={ROUTES.PROJECTS}
                 underline="none"
                 component={RouterLink}
               >

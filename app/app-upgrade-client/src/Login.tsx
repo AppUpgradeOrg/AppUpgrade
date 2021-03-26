@@ -84,7 +84,7 @@ export const Login: FC = () => {
   }, [dispatch]);
 
   if (user) {
-    return <Redirect to={ROUTES.DASHBOARD} />;
+    return <Redirect to={ROUTES.PROJECTS} />;
   }
 
   return (

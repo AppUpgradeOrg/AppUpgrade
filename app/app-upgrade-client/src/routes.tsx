@@ -1,7 +1,7 @@
 import React from 'react';
-import { Dashboard } from './dashboard';
 import { Loading } from './Loading';
 import { Login } from './Login';
+import { EnvironmentsPage } from './ProjectsPage';
 import { Signup } from './Signup';
 
 export type AppRoute = {
@@ -19,7 +19,7 @@ export type AppRoute = {
 export const ROUTES = {
   SIGN_UP: '/signup',
   LOGIN: '/login',
-  DASHBOARD: '/dashboard',
+  PROJECTS: '/projects',
   LOADING: '/'
 };
 
@@ -59,16 +59,16 @@ export const appRoutes: AppRoute[] = [
     }
   },
   {
-    name: 'dashboard',
-    path: ROUTES.DASHBOARD,
+    name: 'environments',
+    path: ROUTES.PROJECTS,
     protected: true,
     exact: true,
     navigation: {
-      label: 'Dashboard',
-      links: ['dashboard']
+      label: 'Environments',
+      links: ['environments']
     },
     component: () => {
-      return <Dashboard />;
+      return <EnvironmentsPage />;
     }
   },
   {

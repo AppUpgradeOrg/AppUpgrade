@@ -6,13 +6,13 @@ export const theme = createMuiTheme({
       main: lightBlue['500'],
       light: lightBlue['300'],
       dark: lightBlue['700'],
-      contrastText: 'white'
+      contrastText: '#ffffff'
     },
     secondary: {
       main: red['A100'],
       light: red['A200'],
       dark: red['A400'],
-      contrastText: 'white'
+      contrastText: '#ffffff'
     }
   }
 });

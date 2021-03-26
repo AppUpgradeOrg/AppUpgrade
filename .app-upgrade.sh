@@ -24,7 +24,7 @@ alias app-upgrade-gamma='cd $APP_UPGRADE_HOME/app \
   && echo $GOOGLE_APPLICATION_CREDENTIALS'
 
 alias app-upgrade:dev:firebase='cd $APP_UPGRADE_HOME/app \
-  && ([ -f $APP_UPGRADE_HOME/app/emulator.data ] \
+  && ([ -d $APP_UPGRADE_HOME/app/emulator.data ] \
       && firebase emulators:start --only firestore,functions,pubsub,auth --import=./emulator.data \
       || firebase emulators:start --only firestore,functions,pubsub,auth --export-on-exit=./emulator.data)'
 
