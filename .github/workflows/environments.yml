@@ -40,7 +40,7 @@ jobs:
           echo "$APP_UPGRADE_HOME/.bin" >> $GITHUB_PATH
           echo "$(yarn global bin)" >> $GITHUB_PATH
 
-      - name: Install and Build
+      - name: Install
         run: |
           export APP_UPGRADE_HOME=$(pwd)
           yarn global add firebase-tools

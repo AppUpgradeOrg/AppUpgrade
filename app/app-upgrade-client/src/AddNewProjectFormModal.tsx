@@ -1,17 +1,19 @@
 import { Box, Button, TextField, Typography } from '@material-ui/core';
 import { makeStyles } from '@material-ui/core/styles';
-import React, { FC, useCallback, useMemo, useState } from 'react';
+import React, { FC, useCallback, useEffect, useMemo, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { Redirect } from 'react-router';
 import { LoadingSpinner } from './LoadingSpinner';
 import {
   ModalBody,
   MODAL_PADDING_UNITS,
   MODAL_WIDTH_PIXELS
 } from './ModalBody';
-import { onboardNewUser } from './onboarding/onboarding.slice';
+import {
+  addNewProject,
+  setAddNewProjectRequestState,
+  setNewProject
+} from './projects/projects.slice';
 import { RootState } from './root-reducer';
-import { ROUTES } from './routes';
 import { RequestState } from './types';
 import { WebSdkCodeSnippet } from './WebSdkCodeSnippet';
 
@@ -23,35 +25,39 @@ const useStyles = makeStyles((theme) => ({
   }
 }));
 
-export type OnboardingFormProps = {
-  onOnboardingCompleted: () => void;
+export type AddNewProjectFormModalProps = {
+  addNewProjectCompleted: () => void;
 };
 
-export const OnboardingForm: FC<OnboardingFormProps> = ({
-  onOnboardingCompleted
+export const AddNewProjectFormModal: FC<AddNewProjectFormModalProps> = ({
+  addNewProjectCompleted
 }) => {
+  const classes = useStyles();
   const dispatch = useDispatch();
-  const [organizationName, setOrganizationName] = useState('');
+
   const [projectName, setProjectName] = useState('');
   const [environmentName, setEnvironmentName] = useState('');
   const [domainName, setDomainName] = useState('');
-
   const [stepIndex, setStepIndex] = useState(0);
-  const [bootstrapping, setBootstrapping] = useState(false);
-  const classes = useStyles();
 
-  const {
-    projects,
-    bootstrappedFirstEnvironmentId,
-    onboardNewUserRequestState
-  } = useSelector((rootState: RootState) => {
-    return {
-      projects: rootState.projects.projects,
-      bootstrappedFirstEnvironmentId: rootState.onboarding.firstEnvironmentId,
-      onboardNewUserRequestState:
-        rootState.onboarding.onboardNewUserRequestState
-    };
-  });
+  const { addNewProjectRequestState, newProject } = useSelector(
+    (rootState: RootState) => {
+      return {
+        addNewProjectRequestState: rootState.projects.addNewProjectRequestState,
+        newProject: rootState.projects.newProject
+      };
+    }
+  );
+
+  const isFetching = addNewProjectRequestState === RequestState.FETCHING;
+
+  // Reset to initial state when component first mounted
+  useEffect(() => {
+    dispatch(setNewProject({ newProject: undefined }));
+    dispatch(
+      setAddNewProjectRequestState({ requestState: RequestState.INITIAL })
+    );
+  }, [dispatch]);
 
   const steps = useMemo(() => {
     return [
@@ -59,36 +65,14 @@ export const OnboardingForm: FC<OnboardingFormProps> = ({
         component: (
           <Box>
             <Typography variant="h6">
-              What is the name of your organization?
-            </Typography>
-            <Box marginTop={1}>
-              <TextField
-                required
-                value={organizationName}
-                autoFocus
-                onChange={(e) => setOrganizationName(e.target.value)}
-                id="organization-name"
-                label="Organization name"
-              />
-            </Box>
-          </Box>
-        ),
-        isValid: () => {
-          return organizationName.length > 0;
-        }
-      },
-      {
-        component: (
-          <Box>
-            <Typography variant="h6">
-              What do you want to name your first project?
+              What do you want to name your project?
             </Typography>
             <TextField
               required
               value={projectName}
               autoFocus
               onChange={(e) => setProjectName(e.target.value)}
-              id="first-project-name"
+              id="project-name"
               label="Project Name"
               helperText="You can always come back and change this later."
             />
@@ -102,14 +86,14 @@ export const OnboardingForm: FC<OnboardingFormProps> = ({
         component: (
           <Box>
             <Typography variant="h6">
-              What do you want to name your first environment?
+              What do you want to name your environment?
             </Typography>
             <TextField
               required
               value={environmentName}
               autoFocus
               onChange={(e) => setEnvironmentName(e.target.value)}
-              id="first-environment-name"
+              id="new-environment-name"
               label="Environment Name"
               helperText="Dev? Staging? Production?"
             />
@@ -130,7 +114,7 @@ export const OnboardingForm: FC<OnboardingFormProps> = ({
               value={domainName}
               autoFocus
               onChange={(e) => setDomainName(e.target.value)}
-              id="first-domain-name"
+              id="new-domain-name"
               label="Domain name"
               helperText="Include subdomain as well if one exists."
             />
@@ -141,7 +125,7 @@ export const OnboardingForm: FC<OnboardingFormProps> = ({
         }
       }
     ];
-  }, [domainName, environmentName, organizationName, projectName]);
+  }, [domainName, environmentName, projectName]);
 
   const onNextButtonPressed = useCallback(
     (event: React.MouseEvent | React.FormEvent) => {
@@ -150,14 +134,13 @@ export const OnboardingForm: FC<OnboardingFormProps> = ({
 
       if (stepIndex === steps.length - 1) {
         dispatch(
-          onboardNewUser(
-            organizationName,
+          addNewProject({
             projectName,
+            projectReleaseStrategy: 'MANUAL',
             environmentName,
             domainName
-          )
+          })
         );
-        setBootstrapping(true);
       } else {
         setStepIndex(stepIndex + 1);
       }
@@ -166,7 +149,6 @@ export const OnboardingForm: FC<OnboardingFormProps> = ({
       stepIndex,
       steps.length,
       dispatch,
-      organizationName,
       projectName,
       environmentName,
       domainName
@@ -177,26 +159,19 @@ export const OnboardingForm: FC<OnboardingFormProps> = ({
     setStepIndex(stepIndex - 1);
   }, [stepIndex, setStepIndex]);
 
-  if (!bootstrapping && projects.length > 0) {
-    return <Redirect to={ROUTES.PROJECTS} />;
-  }
-
   const body = (
     <ModalBody>
       <Box
         display="flex"
         flexDirection="column"
         flex={1}
-        justifyContent={bootstrapping ? 'flex-start' : 'space-between'}
+        justifyContent={isFetching ? 'flex-start' : 'space-between'}
       >
-        {!bootstrapping && (
+        {!isFetching && !newProject && (
           <>
             <Box>
-              <h1 id="onboarding-form-title">Welcome to AppUpgrade</h1>
-              <p id="onboarding-form-description">
-                Let's get started by setting up your account
-              </p>
-              <form id="onboarding-form" onSubmit={onNextButtonPressed}>
+              <h1 id="new-project-form-title">Add New Project</h1>
+              <form id="new-project-form" onSubmit={onNextButtonPressed}>
                 {steps[stepIndex].component}
                 <Box display="flex" justifyContent="flex-end">
                   <Box marginRight={1}>
@@ -224,7 +199,7 @@ export const OnboardingForm: FC<OnboardingFormProps> = ({
           </>
         )}
 
-        {onboardNewUserRequestState === RequestState.FETCHING && (
+        {isFetching && (
           <>
             <Box marginTop={8}>
               <LoadingSpinner />
@@ -232,12 +207,11 @@ export const OnboardingForm: FC<OnboardingFormProps> = ({
           </>
         )}
 
-        {bootstrappedFirstEnvironmentId && (
+        {!isFetching && newProject && (
           <>
             <Box>
               <Typography variant="h6">
-                Awesome, you've setup your first project with your first
-                environment.
+                Environment was successfully added to project.
               </Typography>
               <Box marginTop={1}>
                 <Typography variant="body1">
@@ -254,14 +228,14 @@ export const OnboardingForm: FC<OnboardingFormProps> = ({
               </Box>
               <Box className={classes.codeContainer}>
                 <WebSdkCodeSnippet
-                  environmentId={bootstrappedFirstEnvironmentId}
+                  environmentId={newProject.environments[0].environmentId}
                 />
               </Box>
               <Box marginTop={3} display="flex" justifyContent="flex-end">
                 <Button
                   variant="contained"
                   color="primary"
-                  onClick={() => onOnboardingCompleted()}
+                  onClick={() => addNewProjectCompleted()}
                 >
                   Finish
                 </Button>

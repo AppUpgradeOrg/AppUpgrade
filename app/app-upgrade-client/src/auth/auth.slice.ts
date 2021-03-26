@@ -1,4 +1,6 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
+import { resetOnboardingToInitialState } from '../onboarding/onboarding.slice';
+import { resetProjectsToInitialState } from '../projects/projects.slice';
 import { AppThunk } from '../store';
 import { AppUser, RequestState } from '../types';
 
@@ -206,6 +208,8 @@ export const signOutUser = (): AppThunk => async (
 ) => {
   await authService.signOut();
   dispatch(setUser({ user: null }));
+  dispatch(resetProjectsToInitialState());
+  dispatch(resetOnboardingToInitialState());
 };
 
 export const authReducer = auth.reducer;

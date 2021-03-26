@@ -39,6 +39,10 @@ jobs:
       run: |
         cd app/app-upgrade-client
         yarn lint
+    - name: ESLint:web-sdk
+      run: |
+        cd app/web-sdk
+        yarn lint
     - name: Spellcheck
       run: |
         cd app

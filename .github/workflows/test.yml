@@ -18,6 +18,11 @@ jobs:
         export APP_UPGRADE_HOME=$(pwd)
         cd $APP_UPGRADE_HOME
         app-upgrade-install
+    - name: Build
+      run: |
+        export APP_UPGRADE_HOME=$(pwd)
+        cd $APP_UPGRADE_HOME
+        app-upgrade-build
     - name: test:functions
       run: |
         cd app/functions

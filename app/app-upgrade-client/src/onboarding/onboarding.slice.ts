@@ -26,11 +26,19 @@ const onboarding = createSlice({
     ) {
       state.onboardNewUserRequestState = action.payload.requestState;
       state.firstEnvironmentId = action.payload.firstEnvironmentId;
+    },
+    resetOnboardingToInitialState(state) {
+      state.firstEnvironmentId = initialState.firstEnvironmentId;
+      state.onboardNewUserRequestState =
+        initialState.onboardNewUserRequestState;
     }
   }
 });
 
-export const { setOnboardNewUserRequestState } = onboarding.actions;
+export const {
+  setOnboardNewUserRequestState,
+  resetOnboardingToInitialState
+} = onboarding.actions;
 
 export const onboardNewUser = (
   organizationName: string,

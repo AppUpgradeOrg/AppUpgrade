@@ -59,11 +59,11 @@ test('<NavigationBar /> displays links for protected route with links', () => {
     const referencedNavigationLink = appRoutes.find(
       (ar) => ar.name === navigationLink
     );
-    const dashboardNavigationLink = screen.getByRole('button', {
+    const environmentsPageNavigationLink = screen.getByRole('button', {
       name: referencedNavigationLink?.navigation.label
     });
 
-    expect(dashboardNavigationLink).toHaveAttribute(
+    expect(environmentsPageNavigationLink).toHaveAttribute(
       'href',
       referencedNavigationLink?.path
     );
